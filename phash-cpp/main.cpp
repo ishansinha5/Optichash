@@ -9,27 +9,30 @@ using namespace std;
 
 const string DB_CONN_STR = "postgresql://admin:enterprise_secure@spatial_db:5432/comicdb";
 
+// The enterprise fuzzy-matching logic
+int calculate_hamming_distance(const string& hash1, const string& hash2) {
+    if (hash1.length() != hash2.length()) return 64; // Fallback to max distance if sizes mismatch
+    int distance = 0;
+    for (size_t i = 0; i < hash1.length(); ++i) {
+        if (hash1[i] != hash2[i]) {
+            distance++;
+        }
+    }
+    return distance;
+}
+
 string calculate_phash(const string& image_data) {
     try {
-        // 1. Convert the raw HTTP byte stream into an OpenCV matrix
         vector<char> data(image_data.begin(), image_data.end());
         cv::Mat img = cv::imdecode(data, cv::IMREAD_GRAYSCALE);
-        
         if (img.empty()) return "INVALID_IMAGE_DATA";
 
-        // 2. Crush the image down to 32x32 to destroy high-frequency noise (like glare)
         cv::resize(img, img, cv::Size(32, 32));
-        
-        // OpenCV's DCT requires a 32-bit float matrix
         img.convertTo(img, CV_32F);
-        
-        // 3. Apply the Discrete Cosine Transform
         cv::dct(img, img);
 
-        // 4. Extract the top-left 8x8 block (the lowest frequencies / core structural data)
         cv::Mat topLeft = img(cv::Rect(0, 0, 8, 8));
 
-        // 5. Calculate the mean, excluding the very first pixel [0,0] which is the DC coefficient (overall brightness)
         double sum = 0.0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -39,7 +42,6 @@ string calculate_phash(const string& image_data) {
         }
         double mean = sum / 63.0;
 
-        // 6. Generate the 64-bit hash
         string hash = "";
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -63,7 +65,6 @@ int main() {
 
     svr.Post("/api/analyze-cover", [](const httplib::Request& req, httplib::Response& res) {
         try {
-            // We pass the raw binary payload directly to OpenCV
             string image_hash = calculate_phash(req.body);
             
             if (image_hash == "INVALID_IMAGE_DATA" || image_hash == "HASHING_FAILED") {
@@ -77,11 +78,27 @@ int main() {
             pqxx::connection C(DB_CONN_STR);
             pqxx::nontransaction N(C);
             
-            string query = "SELECT id FROM locg_variants WHERE phash = '" + image_hash + "'";
+            // We fetch all hashes to compare them in memory
+            string query = "SELECT id, phash FROM locg_variants";
             pqxx::result R = N.exec(query);
 
-            if (!R.empty()) {
-                res.set_content("{\"status\": \"cached_hit\", \"optimization_route\": \"cache_hit_cpp\", \"variant_id\": " + R[0][0].as<string>() + "}", "application/json");
+            bool cache_hit = false;
+            string matched_id = "";
+
+            for (auto row : R) {
+                string db_hash = row[1].c_str();
+                int dist = calculate_hamming_distance(image_hash, db_hash);
+                
+                // If the distance is within our threshold (e.g., 10 bits), we consider it the same comic
+                if (dist <= 10) {
+                    cache_hit = true;
+                    matched_id = row[0].c_str();
+                    break;
+                }
+            }
+
+            if (cache_hit) {
+                res.set_content("{\"status\": \"cached_hit\", \"optimization_route\": \"cache_hit_cpp\", \"variant_id\": " + matched_id + "}", "application/json");
             } else {
                 res.set_content("{\"status\": \"cache_miss\", \"optimization_route\": \"inference_python\", \"generated_hash\": \"" + image_hash + "\"}", "application/json");
             }
