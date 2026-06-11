@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Zone 2: PostGIS Database (Seeded with LoCG Schema)
+  spatial_db:
+    image: postgis/postgis:15-3.3
+    container_name: spatial_db
+    restart: always
+    environment:
+      - POSTGRES_DB=comicdb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=enterprise_secure
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./database-init:/docker-entrypoint-initdb.d 
+    networks:
+      - comic_net
+
+  # Zone 2: Java API Gateway (Stubbed for now)
+  gateway-java:
+    build: ./gateway-java
+    container_name: gateway_service
+    networks:
+      - comic_net
+    depends_on:
+      - spatial_db
+
+  # Zone 3: C++ Perceptual Hash Bouncer (The Compute Optimizer)
+  phash-cpp:
+    build: ./phash-cpp
+    container_name: phash_bouncer
+    ports:
+      - "8081:8081"
+    networks:
+      - comic_net
+    depends_on:
+      - spatial_db
+
+  # Zone 4: Python FastAPI Brain (The PyTorch Fallback)
+  ml-python:
+    build: ./ml-python
+    container_name: ml_vision
+    ports:
+      - "8000:8000"
+    networks:
+      - comic_net
+
+networks:
+  comic_net:
+    driver: bridge
+
+volumes:
+  db_data:

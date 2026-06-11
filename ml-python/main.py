@@ -30,4 +30,4 @@ async def sync_calendar():
         {"title": "Amazing Spider-Man #50", "release_date": str(datetime.date.today())},
         {"title": "X-Men #35", "release_date": str(datetime.date.today())}
     ]
-    return {"status": "synced", "calendar_updates": dummy_releases}
+    return {"status": "synced", "calendar_updates": dummy_releases} 
