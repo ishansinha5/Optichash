@@ -1,53 +1,61 @@
-from fastapi import FastAPI, UploadFile, File
-from pydantic import BaseModel
-import torch
 import io
+import torch
+from fastapi import FastAPI, UploadFile, File
 from PIL import Image
-from torchvision import transforms
-from model import ComicVisionNet
-import datetime
+from torchvision.transforms import v2
+from model import GreenComicVision
+import uvicorn
 
 app = FastAPI()
 
-# Initialize our custom CNN (Stubbed with untrained weights for architecture mapping)
-model = ComicVisionNet(num_classes=100)
-model.eval() # Set to evaluation mode for inference
+# 1. Hardware Awareness: Use GPU if available, fallback to CPU
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Inference Engine booting on: {device}")
 
-# The preprocessing pipeline: Resize, grayscale, and normalize
-preprocess = transforms.Compose([
-    transforms.Resize((128, 128)),
-    transforms.Grayscale(num_output_channels=1),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.5], std=[0.5])
+# 2. Initialize the Green AI Model
+# (Right now it loads random untrained weights. After your friends send the data 
+# and we run train.py, we will load the saved .pth file here).
+model = GreenComicVision(num_classes=5).to(device)
+model.eval()  # CRITICAL: Locks the network weights and turns off training behaviors
+
+# 3. The Green AI Preprocessing Pipeline
+# This MUST match the val_transform from dataset.py perfectly. 
+# If you train on 224x224, you must predict on 224x224.
+preprocess = v2.Compose([
+    v2.Resize((224, 224)),
+    v2.ToImage(),
+    v2.ToDtype(torch.float32, scale=True),
+    v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-@app.post("/predict-cover")
-async def predict_cover(file: UploadFile = File(...)):
-    # 1. Read the binary image from the C++ Bouncer
-    image_bytes = await file.read()
-    image = Image.open(io.BytesIO(image_bytes))
-    
-    # 2. Preprocess the image for the CNN
-    input_tensor = preprocess(image)
-    input_batch = input_tensor.unsqueeze(0) # Create a mini-batch of 1
-    
-    # 3. Execute PyTorch Inference
-    with torch.no_grad():
-        output = model(input_batch)
-    
-    # Placeholder for mapping tensor output to actual comic DB ID
-    predicted_class_id = torch.argmax(output[0]).item()
-    
-    return {
-        "status": "success",
-        "optimization_route": "inference_python",
-        "predicted_id": predicted_class_id,
-        "compute_cycles_saved": 0 # 0 saved because we had to run inference
-    }
+@app.post("/process")  # Ensure this endpoint matches what Java is calling!
+async def process_comic(file: UploadFile = File(...)):
+    try:
+        # 1. Catch the multipart bytes from Java and convert to a PIL Image
+        contents = await file.read()
+        image = Image.open(io.BytesIO(contents)).convert("RGB")
+        
+        # 2. Apply preprocessing and add the Batch Dimension
+        # PyTorch always expects batches [Batch_Size, Channels, Height, Width]
+        # unsqueeze(0) turns our single image into a batch of 1.
+        input_tensor = preprocess(image).unsqueeze(0).to(device)
+        
+        # 3. Execute Neural Network Inference
+        with torch.no_grad():  # CRITICAL: Disables gradient tracking to save memory/CPU
+            outputs = model(input_tensor)
+            _, predicted = torch.max(outputs, 1)
+            predicted_id = predicted.item()
 
-@app.get("/sync-release-calendar")
-async def sync_calendar():
-    dummy_releases = [
-        {"title": "Absolute Batman #1", "release_date": str(datetime.date.today())}
-    ]
-    return {"status": "synced", "calendar_updates": dummy_releases}
+        # 4. Return the exact JSON contract your architecture expects
+        return {
+            "status": "success",
+            "optimization_route": "inference_python",
+            "predicted_id": predicted_id,
+            "compute_cycles_saved": 0 # We will update this after INT8 Quantization
+        }
+        
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
