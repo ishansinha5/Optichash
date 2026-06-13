@@ -97,6 +97,7 @@ h1, h2, h3 {
 }
 
 /* ====== THE SLIDING SHADER PANELS (DESKTOP) ====== */
+/* ====== THE SLIDING SHADER PANELS (DESKTOP) ====== */
 .shader-panel {
     position: fixed;
     top: 0;
@@ -106,30 +107,30 @@ h1, h2, h3 {
     color: white;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Allows natural downward scrolling */
-    overflow-y: auto; /* Turns the panel into a scrollable area */
+    justify-content: flex-start; 
+    overflow-y: auto; 
     z-index: 10;
     box-shadow: 0 0 50px rgba(0,0,0,0.9);
 }
 
-/* Centers the text vertically if it's short, but lets it scroll if it's long */
 .content-area {
-    margin: auto 0;
-    padding: 40px 0;
+    margin-top: 12vh; 
+    padding-bottom: 15vh; 
 }
 
+/* Increased inner padding to 38% so text never touches the internal buttons */
 .panel-left {
     left: 0;
     clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
     animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    padding: 0 45% 0 6%; 
+    padding: 0 38% 0 8%; 
 }
 
 .panel-right {
     right: 0;
     clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
     animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    padding: 0 6% 0 45%; 
+    padding: 0 8% 0 38%; 
 }
 
 @keyframes slideInLeft {
@@ -148,37 +149,41 @@ h1, h2, h3 {
     top: 50%;
     display: flex;
     flex-direction: column;
-    gap: 3.5rem;
-    z-index: 50; /* Forces the buttons above everything else on the screen */
+    gap: 2rem;
+    z-index: 20; 
 }
 
-/* Left Panel's Buttons (Live Matcher Page) */
 .nav-left {
-    left: 54vw; /* Anchors the base exactly on the outside of the slant */
-    transform: translateY(-50%) rotate(-9deg); /* Matches the slant angle */
-    align-items: flex-start; 
+    right: 48vw; /* Anchors the buttons safely INSIDE the left dark panel */
+    transform: translateY(-50%) rotate(-9deg); /* Perfect parallel angle */
+    align-items: flex-end;
 }
 
-/* Right Panel's Buttons (Architecture Page) */
 .nav-right {
-    right: 54vw; /* Anchors the base exactly on the outside of the slant */
-    transform: translateY(-50%) rotate(-9deg); /* Matches the slant angle */
-    align-items: flex-end; 
+    left: 48vw; /* Anchors the buttons safely INSIDE the right dark panel */
+    transform: translateY(-50%) rotate(-9deg); /* Perfect parallel angle */
+    align-items: flex-start;
 }
 
+/* Styled as pill buttons to perfectly match your sketch */
 .nav-angled a {
     font-family: "Bangers", sans-serif;
-    color: #ffeb3b; /* Solid yellow to ensure they pop against the background image */
-    text-shadow: 3px 3px 0px rgba(0,0,0,0.9);
-    font-size: 2.5rem; 
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.8rem; 
     text-decoration: none;
     transition: all 0.2s ease;
     text-transform: uppercase;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 10px 25px;
+    background: rgba(0,0,0,0.2);
 }
 
 .nav-angled a:hover {
-    color: white;
-    transform: scale(1.1) rotate(-2deg);
+    color: #ffeb3b;
+    border-color: #ffeb3b;
+    background: rgba(255, 235, 59, 0.1);
+    transform: scale(1.05);
 }
 
 /* ====== INNER CONTENT STYLING ====== */
