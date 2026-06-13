@@ -48,6 +48,7 @@ h1, h2, h3 {
     text-shadow: 4px 4px 0px rgba(0,0,0,0.8), -2px -2px 0px rgba(0,0,0,0.8);
     margin-bottom: 2rem;
     color: #fff;
+    text-align: center;
 }
 
 .home-buttons {
@@ -65,6 +66,7 @@ h1, h2, h3 {
     border: 3px solid white;
     border-radius: 8px;
     transition: all 0.3s ease;
+    text-align: center;
 }
 
 .btn:hover {
@@ -108,14 +110,16 @@ h1, h2, h3 {
     left: 0;
     clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
     animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    padding: 2rem 22% 2rem 5%; /* Adjusted to let text stretch further */
+    /* Massive 35% right padding forces text away from the nav menu */
+    padding: 2rem 35% 2rem 5%; 
 }
 
 .panel-right {
     right: 0;
     clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
     animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    padding: 2rem 5% 2rem 22%; /* Adjusted to let text stretch further */
+    /* Massive 35% left padding forces text away from the nav menu */
+    padding: 2rem 5% 2rem 35%; 
 }
 
 @keyframes slideInLeft {
@@ -139,20 +143,20 @@ h1, h2, h3 {
 }
 
 .nav-left {
-    right: 18%;
+    right: 5%; /* Pushed to extreme edge */
     transform: translateY(-50%) rotate(-6deg); 
     align-items: flex-end;
 }
 
 .nav-right {
-    left: 18%;
+    left: 5%; /* Pushed to extreme edge */
     transform: translateY(-50%) rotate(-6deg); 
     align-items: flex-start;
 }
 
 .nav-angled a {
     font-family: "Bangers", sans-serif;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.4);
     font-size: 1.8rem; 
     text-decoration: none;
     transition: all 0.2s ease;
@@ -176,7 +180,7 @@ h1, h2, h3 {
     font-size: 1.15rem;
     line-height: 1.6;
     color: #cbd5e1;
-    max-width: 100%; /* Stretches to the edge of the padding */
+    max-width: 100%;
 }
 
 .architectural-detail strong {
@@ -210,10 +214,13 @@ h1, h2, h3 {
 
 /* ====== MOBILE OVERRIDE ====== */
 @media (max-width: 768px) {
+    .home-title {
+        font-size: 4rem; /* Scale down title for mobile */
+    }
     .shader-panel {
-        width: 100vw; /* Fills the whole screen */
-        clip-path: none; /* Removes the slant */
-        padding: 100px 20px 30px 20px; /* Space at top for nav links */
+        width: 100vw; 
+        clip-path: none; 
+        padding: 110px 20px 40px 20px; /* Heavy top padding clears the nav */
         align-items: center;
         text-align: center;
         overflow-y: auto;
@@ -222,20 +229,31 @@ h1, h2, h3 {
     .nav-angled {
         top: 20px;
         left: 50%;
-        transform: translateX(-50%) !important; /* Forces center, removes rotation */
-        flex-direction: row; /* Side-by-side links */
-        width: 100%;
+        transform: translateX(-50%) !important; 
+        flex-direction: row; 
+        flex-wrap: wrap; /* Allows links to wrap if font is huge */
+        width: 90%;
         justify-content: center;
-        gap: 1.5rem;
+        gap: 1rem;
+    }
+
+    /* Mobile Pill Nav Style */
+    .nav-angled a {
+        font-size: 1.1rem;
+        background: rgba(255, 235, 59, 0.15);
+        border: 1px solid #ffeb3b;
+        border-radius: 20px;
+        padding: 8px 16px;
+        color: #ffeb3b;
     }
     
     .content-area h1 {
-        font-size: 2.8rem;
+        font-size: 2.5rem;
     }
     
     .architectural-detail {
-        text-align: left; /* Keeps paragraph text readable */
-        font-size: 1.05rem;
+        text-align: left; 
+        font-size: 1rem; /* Base 1rem prevents aggressive scaling explosion */
     }
     
     .home-buttons {

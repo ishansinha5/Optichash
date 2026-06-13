@@ -21,18 +21,18 @@
       <h1>SYSTEM ARCHITECTURE</h1>
       
       <p class="architectural-detail">
-        <strong>The "Optimized AI" Constraint:</strong><br>
-        It is easy to build an image classifier if you have unlimited cloud credits and heavy GPU clusters. This project was an exercise in artificial constraints. I wanted to build a B2B-style microservice architecture capable of running entirely on constrained edge hardware (or a standard laptop CPU) while maintaining high accuracy.
+        <strong>The Compute Constraint:</strong><br>
+        While deploying an image classifier is straightforward with access to heavy GPU clusters, this project was designed around artificial compute constraints. Drawing from enterprise-grade system configuration, my goal was to architect a microservices pipeline capable of running locally on a standard CPU while maintaining production-level accuracy.
       </p>
 
       <p class="architectural-detail" style="margin-top: 1.5rem;">
         <strong>1. Spatial Caching via C++:</strong><br>
-        Machine learning is expensive; simple math is cheap. I built a native C++ layer that intercepts requests and hashes images at the byte level. By checking these hashes against a PostGIS spatial database, the system creates a high-speed caching layer that shields the heavier PyTorch models from duplicate traffic.
+        Because neural network inference is computationally expensive, I engineered a native C++ layer to intercept requests and hash images at the byte level. By evaluating these hashes against a PostGIS spatial database, the system forms a high-speed caching layer, shielding the PyTorch models from duplicate processing.
       </p>
 
       <p class="architectural-detail" style="margin-top: 1.5rem;">
         <strong>2. Quantized Edge Compute (PyTorch):</strong><br>
-        When the C++ cache misses, the request is handled by a Python FastAPI endpoint running a vision model. Instead of a massive architecture, it uses a lightweight <i>MobileNetV3</i> backbone. By aggressively pruning the weights and applying INT8 Dynamic Quantization (compressing 32-bit floating-point math down to 8-bit integers), the model executes near-instant inference with a fraction of standard RAM utilization.
+        When a cache miss occurs, the payload is forwarded to a Python FastAPI endpoint running a PyTorch vision model. To maintain the optimization constraint, it utilizes a lightweight <i>MobileNetV3</i> backbone. By aggressively pruning weights and applying INT8 Dynamic Quantization (compressing 32-bit floating-point parameters down to 8-bit integers), the model achieves near-instant inference with significantly reduced memory utilization.
       </p>
     </div>
 

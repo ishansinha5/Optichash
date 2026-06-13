@@ -20,9 +20,9 @@
     <div class="content-area">
       <h1>LIVE MATCH ENGINE</h1>
       <p class="architectural-detail">
-        I wanted to see if I could build a computer vision pipeline that didn't immediately melt my laptop's CPU. The goal here is efficient routing. When you upload a messy photo of a comic book below, the system doesn't instantly fire up a heavy neural network. 
+        This project began as a challenge to build a computer vision pipeline optimized for standard hardware constraints. The core focus is efficient system routing. When you upload a photo below, the architecture deliberately avoids spinning up heavy neural networks right away.
         <br><br>
-        Instead, it routes the image to a native C++ microservice that acts as a bouncer, calculating a byte-level Perceptual Hash (pHash). If it finds an exact spatial match in the database, it returns the metadata instantly—saving massive amounts of compute. Only if it's a completely new, unrecognized image does the system pass the request to the PyTorch machine learning layer to make an active prediction.
+        Instead, the payload is routed to a native C++ microservice that calculates a byte-level Perceptual Hash (pHash). If it finds an exact spatial match in the local cache, it returns the metadata instantly—bypassing the machine learning layer entirely. The quantized PyTorch engine is only invoked for truly unrecognized images.
       </p>
       
       <div class="scanner-container">
