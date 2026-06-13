@@ -150,21 +150,30 @@ h1, h2, h3 {
     flex-direction: column;
     gap: 1.5rem;
     z-index: 20;
+    pointer-events: none; /* prevent invisible area blocking clicks */
 }
 
-/* LEFT panel (recommender): bottom-right of button group anchored to slant edge */
+.nav-angled a {
+    pointer-events: all;
+}
+
+/* LEFT panel: clip-path right edge runs from (65vw, 0) to (49vw, 100vh).
+   At top: edge is at ~65vw from left = 35vw from right.
+   We place the group near the top, right edge touching the slant line. */
 .nav-left {
-    top: 28%;
-    right: 36vw;
+    top: 15vh;
+    right: 35vw;
     transform: rotate(-14deg);
-    transform-origin: bottom right;
+    transform-origin: top right;
     align-items: flex-end;
 }
 
-/* RIGHT panel (about): top-left of button group anchored to slant edge */
+/* RIGHT panel: clip-path left edge runs from (35vw, 0) to (51vw, 100vh).
+   At top: edge is at ~35vw from left.
+   We place the group near the top, left edge touching the slant line. */
 .nav-right {
-    top: 28%;
-    left: 36vw;
+    top: 15vh;
+    left: 35vw;
     transform: rotate(-14deg);
     transform-origin: top left;
     align-items: flex-start;
