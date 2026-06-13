@@ -165,6 +165,30 @@ h1, h2, h3 {
     align-items: flex-start;
 }
 
+/* ====== ANGLED NAVIGATION (DESKTOP) ====== */
+.nav-angled {
+    position: fixed; 
+    top: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Tightened the gap so they look like a unified control cluster */
+    z-index: 20; 
+}
+
+.nav-left {
+    right: 44.5vw; /* Anchors perfectly flush against the inside of the right slant */
+    transform: translateY(-50%) rotate(-14deg); /* Steeper angle to perfectly match the clip-path polygon */
+    align-items: flex-end;
+    transform-origin: bottom right; /* Anchors the bottom edge to the slant per your sketch */
+}
+
+.nav-right {
+    left: 44.5vw; /* Anchors perfectly flush against the inside of the left slant */
+    transform: translateY(-50%) rotate(-14deg); /* Steeper angle to perfectly match the clip-path polygon */
+    align-items: flex-start;
+    transform-origin: top left; /* Anchors the top edge to the slant per your sketch */
+}
+
 /* Styled as pill buttons to perfectly match your sketch */
 .nav-angled a {
     font-family: "Bangers", sans-serif;
@@ -177,6 +201,7 @@ h1, h2, h3 {
     border-radius: 30px;
     padding: 10px 25px;
     background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(4px);
 }
 
 .nav-angled a:hover {
