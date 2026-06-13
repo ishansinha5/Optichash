@@ -146,27 +146,26 @@ h1, h2, h3 {
 /* ====== ANGLED NAVIGATION (DESKTOP) ====== */
 .nav-angled {
     position: fixed;
-    top: 50%;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     z-index: 20;
 }
 
-/* LEFT panel (recommender): slant edge is the right side of the panel.
-   Buttons rotate so their BOTTOM-RIGHT corner is pinned to the slant. */
+/* LEFT panel (recommender): bottom-right of button group anchored to slant edge */
 .nav-left {
-    right: 35vw;
-    transform: translateY(-50%) rotate(-14deg);
+    top: 28%;
+    right: 36vw;
+    transform: rotate(-14deg);
     transform-origin: bottom right;
     align-items: flex-end;
 }
 
-/* RIGHT panel (about): slant edge is the left side of the panel.
-   Buttons rotate so their TOP-LEFT corner is pinned to the slant. */
+/* RIGHT panel (about): top-left of button group anchored to slant edge */
 .nav-right {
-    left: 35vw;
-    transform: translateY(-50%) rotate(-14deg);
+    top: 28%;
+    left: 36vw;
+    transform: rotate(-14deg);
     transform-origin: top left;
     align-items: flex-start;
 }

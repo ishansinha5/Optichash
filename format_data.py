@@ -35,4 +35,4 @@ def sanitize_dataset(directory="./ml-python/dataset"):
 
 if __name__ == "__main__":
     # Ensure you update this path to point to wherever you saved your friend's folders!
-    sanitize_dataset(directory="./dataset")
+    sanitize_dataset(directory="./ml-python/dataset")
