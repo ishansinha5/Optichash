@@ -11,6 +11,10 @@
   <div class="subpage-bg"></div>
   
   <div class="shader-panel panel-left">
+    <nav class="nav-angled nav-left">
+      <a href="index.html">Home</a>
+      <a href="about.html">Architecture</a>
+    </nav>
     <div class="content-area">
       <h1>LIVE MATCH ENGINE</h1>
       <p class="architectural-detail">
@@ -36,35 +40,6 @@
     </div>
 
   </div>
-
-  <!-- Nav sits outside the clipped panel so clip-path doesn't hide it -->
-  <nav class="nav-angled nav-left" id="nav-left">
-    <a href="index.html">Home</a>
-    <a href="about.html">Architecture</a>
-  </nav>
-
-  <script>
-    // Left panel: 65vw wide, clip-path polygon(0 0, 100% 0, 75% 100%, 0 100%)
-    // Slant right edge x = panelW * (1 - 0.25 * t) where t = top/vh (0..1)
-    function positionNavLeft() {
-      var nav = document.getElementById('nav-left');
-      if (window.innerWidth <= 768) return; // mobile handled by CSS
-      var vw = window.innerWidth;
-      var vh = window.innerHeight;
-      var panelW = vw * 0.65;
-      var navTop = vh * 0.12; // 12vh from top
-      var t = navTop / vh;
-      // x position of slant at this vertical point
-      var slantX = panelW * (1 - 0.25 * t);
-      nav.style.position = 'fixed';
-      nav.style.top = navTop + 'px';
-      // right edge of nav group = slantX, so set 'right' = vw - slantX
-      nav.style.right = (vw - slantX) + 'px';
-      nav.style.left = 'auto';
-    }
-    positionNavLeft();
-    window.addEventListener('resize', positionNavLeft);
-  </script>
 
   <script src="scanner.js"></script>
 </body>

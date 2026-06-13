@@ -11,6 +11,10 @@
   <div class="subpage-bg"></div>
 
   <div class="shader-panel panel-right">
+    <nav class="nav-angled nav-right">
+      <a href="index.html">Home</a>
+      <a href="recommender.html">Live Matcher</a>
+    </nav>
     <div class="content-area">
       <h1>SYSTEM ARCHITECTURE</h1>
       
@@ -31,35 +35,6 @@
     </div>
 
   </div>
-
-  <!-- Nav sits outside the clipped panel so clip-path doesn't hide it -->
-  <nav class="nav-angled nav-right" id="nav-right">
-    <a href="index.html">Home</a>
-    <a href="recommender.html">Live Matcher</a>
-  </nav>
-
-  <script>
-    // Right panel: 65vw wide, anchored to right, clip-path polygon(25% 0, 100% 0, 100% 100%, 0 100%)
-    // Slant left edge x from left = vw - panelW + panelW*0.25*(1-t) where t = top/vh
-    function positionNavRight() {
-      var nav = document.getElementById('nav-right');
-      if (window.innerWidth <= 768) return; // mobile handled by CSS
-      var vw = window.innerWidth;
-      var vh = window.innerHeight;
-      var panelW = vw * 0.65;
-      var navTop = vh * 0.12; // 12vh from top
-      var t = navTop / vh;
-      // Left edge of right panel = vw - panelW = 0.35vw
-      // Slant x at this t = (vw - panelW) + panelW * 0.25 * (1 - t)
-      var slantX = (vw - panelW) + panelW * 0.25 * (1 - t);
-      nav.style.position = 'fixed';
-      nav.style.top = navTop + 'px';
-      nav.style.left = slantX + 'px';
-      nav.style.right = 'auto';
-    }
-    positionNavRight();
-    window.addEventListener('resize', positionNavRight);
-  </script>
 
 </body>
 </html>
