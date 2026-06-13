@@ -123,14 +123,14 @@ h1, h2, h3 {
     left: 0;
     clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
     animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    padding: 0 38% 0 8%; 
+    padding: 0 30% 0 8%;
 }
 
 .panel-right {
     right: 0;
     clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
     animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    padding: 0 8% 0 38%; 
+    padding: 0 8% 0 30%;
 }
 
 @keyframes slideInLeft {
@@ -144,36 +144,37 @@ h1, h2, h3 {
 }
 
 /* ====== ANGLED NAVIGATION (DESKTOP) ====== */
+/* Nav sits OUTSIDE the clipped panel so it isn't hidden by clip-path.
+   We use JS to position it exactly on the slant — see scanner.js / inline script.
+   These are the base styles; JS sets top/left at runtime. */
 .nav-angled {
     position: fixed;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
     z-index: 20;
-    pointer-events: none; /* prevent invisible area blocking clicks */
+    pointer-events: none;
 }
 
 .nav-angled a {
     pointer-events: all;
 }
 
-/* LEFT panel: clip-path right edge runs from (65vw, 0) to (49vw, 100vh).
-   At top: edge is at ~65vw from left = 35vw from right.
-   We place the group near the top, right edge touching the slant line. */
+/* LEFT panel: panel is 65vw wide, clip goes from 100% top to 75% bottom.
+   Slant x at top = 65vw. We anchor the button group's top-right corner there. */
 .nav-left {
-    top: 15vh;
-    right: 25vw;
+    top: 12vh;
+    right: 35vw;
     transform: rotate(-14deg);
     transform-origin: top right;
     align-items: flex-end;
 }
 
-/* RIGHT panel: clip-path left edge runs from (35vw, 0) to (51vw, 100vh).
-   At top: edge is at ~35vw from left.
-   We place the group near the top, left edge touching the slant line. */
+/* RIGHT panel: panel-right starts at 35vw from left (100-65).
+   Slant x at top = 35vw. We anchor the button group's top-left corner there. */
 .nav-right {
-    top: 15vh;
-    left: 25vw;
+    top: 12vh;
+    left: 35vw;
     transform: rotate(-14deg);
     transform-origin: top left;
     align-items: flex-start;
