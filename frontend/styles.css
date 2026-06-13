@@ -251,25 +251,54 @@ h1, h2, h3 {
         padding: 100px 20px 40px 20px; /* Safe padding for nav */
     }
     
+    /* ====== ANGLED NAVIGATION (DESKTOP) ====== */
     .nav-angled {
-        position: absolute; /* Anchors to top of panel, scrolls away gracefully */
-        top: 25px;
-        left: 50%;
-        transform: translateX(-50%) !important; 
-        flex-direction: row; 
-        flex-wrap: wrap; 
-        width: 90%;
-        justify-content: center;
-        gap: 1rem;
+        position: fixed;
+        top: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        z-index: 20;
+        pointer-events: none; /* Prevents the invisible flex box from blocking clicks on the text below */
     }
 
     .nav-angled a {
-        font-size: 1.1rem;
-        background: rgba(255, 235, 59, 0.15);
-        border: 1px solid #ffeb3b;
-        border-radius: 20px;
-        padding: 8px 16px;
+        pointer-events: all; /* Re-enables clicking strictly on the buttons themselves */
+        font-family: "Bangers", sans-serif;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 1.8rem; 
+        text-decoration: none;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 30px;
+        padding: 10px 25px;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(4px);
+        white-space: nowrap;
+    }
+
+    .nav-angled a:hover {
         color: #ffeb3b;
+        border-color: #ffeb3b;
+        background: rgba(255, 235, 59, 0.15);
+        transform: scale(1.05);
+    }
+
+/* LEFT PANEL (Recommender): Slant line sits at exactly 56.8vw at the vertical center */
+    .nav-left {
+        left: 55vw; /* Sets the absolute anchor point just safely inside the slant */
+        transform: translateY(-50%) translateX(-100%) rotate(-14deg); /* Shifts the buttons left by 100% of their own width so their RIGHT edge hits the anchor, then rotates */
+        align-items: flex-end; 
+        transform-origin: right center; /* Rotates the buttons around their right edge to stay flush */
+    }
+
+/* RIGHT PANEL (About): Slant line sits at exactly 43.1vw at the vertical center */
+    .nav-right {
+        left: 45vw; /* Sets the absolute anchor point just safely inside the slant */
+        transform: translateY(-50%) rotate(-14deg); 
+        align-items: flex-start; 
+        transform-origin: left center; /* Rotates the buttons around their left edge to stay flush */
     }
     
     .content-area {
