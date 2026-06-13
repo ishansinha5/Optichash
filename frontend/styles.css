@@ -271,14 +271,36 @@ h1, h2, h3 {
 /* ====== MOBILE OVERRIDE ====== */
 @media (max-width: 500px) {
     .home-title { font-size: 4rem; }
-    .shader-panel { width: 100vw; clip-path: none; padding: 100px 20px 40px 20px; }
-    .nav-angled { top: 120px; flex-direction: row; justify-content: center; width: 100%; left: 0 !important; right: 0 !important; transform: none !important; }
-    .nav-left, .nav-right { position: static !important; transform: none !important; }
+    
+    .shader-panel { 
+        width: 100vw; 
+        clip-path: none; 
+        padding: 100px 20px 40px 20px; 
+    }
+    
+    .nav-angled { 
+        /* Drops the buttons perfectly into the 100px padding gap at the top */
+        top: 30px !important; 
+        flex-direction: row; 
+        justify-content: center; 
+        width: 100%; 
+        left: 0 !important; 
+        right: 0 !important; 
+        transform: none !important; 
+        z-index: 100 !important; /* Bulletproofs the layering over the shader panel */
+    }
+    
+    .nav-left, .nav-right { 
+        /* Only kills the desktop rotation, keeps the fixed position intact */
+        transform: none !important; 
+    }
+    
     .content-area { padding: 0; margin: 0; }
     .content-area h1 { font-size: 2.5rem; }
     .architectural-detail { text-align: left; font-size: 1rem; }
     .home-buttons { flex-direction: column; width: 90%; }
     .btn { width: 100%; text-align: center; box-sizing: border-box; }
+    
     /* Un-hides the camera button on mobile */
     .mobile-camera-only { display: inline-flex !important; }
 }
