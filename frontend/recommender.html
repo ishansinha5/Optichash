@@ -4,15 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpticHash | Scanner</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2245%22>📸🦹</text></svg>">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="subpage-bg"></div>
   
   <div class="shader-panel panel-left">
     
     <div class="nav-angled nav-left">
       <a href="index.html">Home</a>
-      <a href="recommender.html" class="active">Live Matcher</a>
       <a href="about.html">Architecture</a>
     </div>
 
@@ -28,12 +29,12 @@
         </label>
         <input type="file" id="camera-upload" accept="image/*" capture="environment" style="display: none;" onchange="previewAndUpload(event)">
         
-        <div id="demo-preview-zone" style="margin-top: 1.5rem; min-height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+        <div id="demo-preview-zone" style="margin-top: 1.5rem; min-height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
           <p id="preview-placeholder" style="color: #64748b; font-weight: 600;">Preview rendering zone</p>
           <img id="preview-img" style="width: 100%; display: none; object-fit: contain; border-radius: 8px;" />
         </div>
 
-        <div id="scan-results" style="margin-top: 1rem; font-family: 'Bangers', sans-serif; font-size: 2.2rem; color: #ffeb3b; text-shadow: 2px 2px 0px #000;"></div>
+        <div id="scan-results" style="margin-top: 1rem; font-family: 'Bangers', sans-serif; font-size: 2rem; color: #ffeb3b; text-shadow: 2px 2px 0px #000;"></div>
         <p id="route-indicator" class="architectural-detail" style="display: none; margin-top: 0.5rem; color: #4ade80;"></p>
       </div>
     </div>
