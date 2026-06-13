@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;600;800&display=swap');
 
-/* This single rule prevents the mobile width smush */
 * {
     box-sizing: border-box; 
 }
@@ -96,7 +95,7 @@ h1, h2, h3 {
     z-index: -2;
 }
 
-/* ====== THE SLIDING SHADER PANELS (DESKTOP) ====== */
+/* ====== THE SLIDING SHADER PANELS ====== */
 .shader-panel {
     position: fixed;
     top: 0;
@@ -116,7 +115,6 @@ h1, h2, h3 {
     padding-bottom: 15vh; 
 }
 
-/* LEFT PANEL (Engine): Wider at top, narrower at bottom ( / Slant ) */
 .panel-left {
     left: 0;
     clip-path: polygon(0 0, 100% 0, calc(100% - 25vh) 100%, 0 100%);
@@ -125,7 +123,6 @@ h1, h2, h3 {
     background-color: rgba(15, 23, 42, 0.95);
 }
 
-/* RIGHT PANEL (Architecture): Perfectly mirrored! Wider at top, narrower at bottom ( \ Slant ) */
 .panel-right {
     right: 0;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 25vh 100%);
@@ -147,7 +144,7 @@ h1, h2, h3 {
 /* ====== ANGLED NAVIGATION (DESKTOP) ====== */
 .nav-angled {
     position: fixed;
-    top: 50%;
+    top: 10vh; 
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
@@ -158,7 +155,7 @@ h1, h2, h3 {
     pointer-events: all;
     font-family: "Bangers", sans-serif;
     color: rgba(255, 255, 255, 0.85);
-    font-size: 1.8rem; 
+    font-size: 1.4rem; 
     text-decoration: none;
     transition: all 0.2s ease;
     text-transform: uppercase;
@@ -177,22 +174,18 @@ h1, h2, h3 {
     transform: scale(1.05);
 }
 
-/* LEFT PANEL BUTTONS */
 .nav-left {
     left: auto !important; 
-    right: calc(35vw + 12.5vh + 15px); 
-    transform: translateY(-50%) rotate(-14deg); 
+    right: 39vw; 
+    transform: rotate(-14deg); 
     align-items: flex-end; 
-    transform-origin: right center; 
 }
 
-/* RIGHT PANEL BUTTONS */
 .nav-right {
     right: auto !important; 
-    left: calc(35vw + 12.5vh + 15px); 
-    transform: translateY(-50%) rotate(14deg); 
+    left: 39vw; 
+    transform: rotate(14deg); 
     align-items: flex-start; 
-    transform-origin: left center; 
 }
 
 /* ====== INNER CONTENT STYLING ====== */
@@ -219,21 +212,56 @@ h1, h2, h3 {
     border: 2px dashed rgba(255, 255, 255, 0.3);
     background: rgba(0, 0, 0, 0.4);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 2rem;
     margin-top: 1.5rem;
     max-width: 450px;
+    
+    /* 1. The Flexbox Centering Magic */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    /* 2. Give the box some physical height so it isn't flat */
+    min-height: 250px; 
+    gap: 2rem; /* Adds space between the buttons and the preview text */
+}
+
+.scanner-buttons {
+    display: flex;
+    gap: 1.5rem; /* Space between the two buttons */
+    flex-wrap: wrap; /* Prevents them from squishing on tiny screens */
+    justify-content: center;
 }
 
 .upload-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: #ffeb3b;
     color: black;
     font-family: "Bangers", sans-serif;
-    font-size: 1.5rem;
-    padding: 8px 16px;
+    font-size: 1.4rem;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+}
+
+/* Hides the camera button on desktop/laptops */
+.mobile-camera-only {
+    display: none !important; 
+}
+
+.upload-btn:hover {
+    background: white;
+    transform: scale(1.05); /* Slight pop effect on hover */
+}
+
+.preview-text {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+    margin: 0;
 }
 
 .upload-btn:hover {
@@ -241,87 +269,16 @@ h1, h2, h3 {
 }
 
 /* ====== MOBILE OVERRIDE ====== */
-@media (max-width: 768px) {
-    .home-title {
-        font-size: 4rem; 
-    }
-    
-    .shader-panel {
-        width: 100vw; 
-        clip-path: none; 
-        padding: 100px 20px 40px 20px; 
-    }
-    
-    /* MOBILE NAV ADJUSTMENTS (Simplified to sit flat at the top) */
-    /* ====== FLAT NAVIGATION (DESKTOP) ====== */
-.nav-angled {
-    position: fixed;
-    top: 5vh; /* Places them cleanly in the empty top space */
-    display: flex;
-    flex-direction: row; /* Puts them side-by-side */
-    gap: 1.5rem;
-    z-index: 20;
-}
-
-.nav-angled a {
-    pointer-events: all;
-    font-family: "Bangers", sans-serif;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 1.8rem; 
-    text-decoration: none;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 30px;
-    padding: 8px 25px; /* Slightly tightened padding for a horizontal row */
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(4px);
-    white-space: nowrap;
-}
-
-.nav-angled a:hover {
-    color: #ffeb3b;
-    border-color: #ffeb3b;
-    background: rgba(255, 235, 59, 0.15);
-    transform: scale(1.05);
-}
-
-/* LEFT PANEL BUTTONS */
-.nav-left {
-    left: 6vw; /* Perfectly aligns with your text's left padding */
-    right: auto !important; 
-    transform: none; /* Kills the rotation */
-}
-
-/* RIGHT PANEL BUTTONS */
-.nav-right {
-    right: 6vw; /* Perfectly aligns with your text's right padding */
-    left: auto !important; 
-    transform: none; /* Kills the rotation */
-}
-    
-    .content-area {
-        padding: 0; 
-        margin: 0; 
-    }
-    
-    .content-area h1 {
-        font-size: 2.5rem;
-    }
-    
-    .architectural-detail {
-        text-align: left; 
-        font-size: 1rem; 
-    }
-    
-    .home-buttons {
-        flex-direction: column;
-        width: 90%;
-    }
-    
-    .btn {
-        width: 100%;
-        text-align: center;
-        box-sizing: border-box;
-    }
+@media (max-width: 500px) {
+    .home-title { font-size: 4rem; }
+    .shader-panel { width: 100vw; clip-path: none; padding: 100px 20px 40px 20px; }
+    .nav-angled { top: 120px; flex-direction: row; justify-content: center; width: 100%; left: 0 !important; right: 0 !important; transform: none !important; }
+    .nav-left, .nav-right { position: static !important; transform: none !important; }
+    .content-area { padding: 0; margin: 0; }
+    .content-area h1 { font-size: 2.5rem; }
+    .architectural-detail { text-align: left; font-size: 1rem; }
+    .home-buttons { flex-direction: column; width: 90%; }
+    .btn { width: 100%; text-align: center; box-sizing: border-box; }
+    /* Un-hides the camera button on mobile */
+    .mobile-camera-only { display: inline-flex !important; }
 }

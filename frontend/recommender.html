@@ -25,18 +25,19 @@
       </p>
       
       <div class="scanner-container">
-        <label for="camera-upload" class="upload-btn">
+      <div class="scanner-buttons">
+        <label class="upload-btn mobile-camera-only">
           📸 OPEN CAMERA
+          <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" capture="environment" style="display: none;">
         </label>
-        <input type="file" id="camera-upload" accept="image/*" capture="environment" style="display: none;" onchange="previewAndUpload(event)">
-        
-        <div id="demo-preview-zone" style="margin-top: 1.5rem; min-height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-          <p id="preview-placeholder" style="color: #64748b; font-weight: 600;">Preview rendering zone</p>
-          <img id="preview-img" style="width: 100%; display: none; object-fit: contain; border-radius: 8px;" />
-        </div>
 
-        <div id="scan-results" style="margin-top: 1rem; font-family: 'Bangers', sans-serif; font-size: 2rem; color: #ffeb3b; text-shadow: 2px 2px 0px #000;"></div>
-        <p id="route-indicator" class="architectural-detail" style="display: none; margin-top: 0.5rem; color: #4ade80; font-size: 0.95rem;"></p>
+        <label class="upload-btn">
+          📁 UPLOAD FILE
+          <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" style="display: none;">
+        </label>
+      </div>
+
+        <p class="preview-text">Preview rendering zone</p>
       </div>
     </div>
 
