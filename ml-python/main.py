@@ -13,14 +13,20 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Inference Engine booting on: {device}")
 
 # 2. Initialize the Green AI Model
-# (Right now it loads random untrained weights. After your friends send the data 
-# and we run train.py, we will load the saved .pth file here).
-model = GreenComicVision(num_classes=5).to(device)
+model = GreenComicVision(num_classes=5)
+
+# Load the true weights trained from your friends' chaos pictures.
+# Wrapped in a try/except so the container doesn't crash before you run train.py!
+try:
+    model.load_state_dict(torch.load("comic_vision_fp32.pth", map_location=device))
+    print("SUCCESS: Loaded trained FP32 weights.")
+except FileNotFoundError:
+    print("WARNING: comic_vision_fp32.pth not found. Using untrained weights until train.py is executed.")
+
+model.to(device)
 model.eval()  # CRITICAL: Locks the network weights and turns off training behaviors
 
 # 3. The Green AI Preprocessing Pipeline
-# This MUST match the val_transform from dataset.py perfectly. 
-# If you train on 224x224, you must predict on 224x224.
 preprocess = v2.Compose([
     v2.Resize((224, 224)),
     v2.ToImage(),
@@ -28,7 +34,7 @@ preprocess = v2.Compose([
     v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-@app.post("/process")  # Ensure this endpoint matches what Java is calling!
+@app.post("/process")  
 async def process_comic(file: UploadFile = File(...)):
     try:
         # 1. Catch the multipart bytes from Java and convert to a PIL Image
@@ -36,8 +42,6 @@ async def process_comic(file: UploadFile = File(...)):
         image = Image.open(io.BytesIO(contents)).convert("RGB")
         
         # 2. Apply preprocessing and add the Batch Dimension
-        # PyTorch always expects batches [Batch_Size, Channels, Height, Width]
-        # unsqueeze(0) turns our single image into a batch of 1.
         input_tensor = preprocess(image).unsqueeze(0).to(device)
         
         # 3. Execute Neural Network Inference
