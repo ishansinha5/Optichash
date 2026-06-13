@@ -162,7 +162,7 @@ h1, h2, h3 {
    We place the group near the top, right edge touching the slant line. */
 .nav-left {
     top: 15vh;
-    right: 35vw;
+    right: 25vw;
     transform: rotate(-14deg);
     transform-origin: top right;
     align-items: flex-end;
@@ -173,7 +173,7 @@ h1, h2, h3 {
    We place the group near the top, left edge touching the slant line. */
 .nav-right {
     top: 15vh;
-    left: 35vw;
+    left: 25vw;
     transform: rotate(-14deg);
     transform-origin: top left;
     align-items: flex-start;
