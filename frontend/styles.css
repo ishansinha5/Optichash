@@ -95,6 +95,7 @@ h1, h2, h3 {
     height: 100%;
     z-index: -2;
 }
+
 /* ====== THE SLIDING SHADER PANELS (DESKTOP) ====== */
 .shader-panel {
     position: fixed;
@@ -120,7 +121,7 @@ h1, h2, h3 {
     left: 0;
     clip-path: polygon(0 0, 100% 0, calc(100% - 25vh) 100%, 0 100%);
     animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    padding: 0 18vw 0 6vw; /* Keeps text away from the slant */
+    padding: 0 18vw 0 6vw; 
     background-color: rgba(15, 23, 42, 0.95);
 }
 
@@ -129,7 +130,7 @@ h1, h2, h3 {
     right: 0;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 25vh 100%);
     animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    padding: 0 6vw 0 18vw; /* Keeps text away from the slant */
+    padding: 0 6vw 0 18vw; 
     background-color: rgba(15, 23, 42, 0.95);
 }
 
@@ -143,157 +144,6 @@ h1, h2, h3 {
     to { transform: translateX(0); }
 }
 
-/* ====== ANGLED NAVIGATION (DESKTOP) ====== */
-.nav-angled {
-    position: fixed;
-    top: 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    z-index: 20;
-}
-
-.nav-angled a {
-    font-family: "Bangers", sans-serif;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 1.8rem; 
-    text-decoration: none;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 30px;
-    padding: 10px 25px;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(4px);
-    white-space: nowrap;
-}
-
-.nav-angled a:hover {
-    color: #ffeb3b;
-    border-color: #ffeb3b;
-    background: rgba(255, 235, 59, 0.15);
-    transform: scale(1.05);
-}
-
-/* LEFT PANEL BUTTONS */
-.nav-left {
-    left: auto !important; 
-    right: calc(35vw + 12.5vh + 15px); /* Calculates the exact / edge and leaves a 15px gap */
-    transform: translateY(-50%) rotate(-14deg); 
-    align-items: flex-end; 
-    transform-origin: right center; 
-}
-
-/* RIGHT PANEL BUTTONS */
-.nav-right {
-    right: auto !important; 
-    left: calc(35vw + 12.5vh + 15px); /* Calculates the exact \ edge and leaves a 15px gap */
-    transform: translateY(-50%) rotate(14deg); /* Positive rotation to match the mirrored \ slant! */
-    align-items: flex-start; 
-    transform-origin: left center; 
-}
-
-.nav-angled a {
-    pointer-events: all;
-    font-family: "Bangers", sans-serif;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 1.8rem;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 30px;
-    padding: 10px 25px;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(4px);
-    white-space: nowrap;
-}
-
-.nav-angled a:hover {
-    color: #ffeb3b;
-    border-color: #ffeb3b;
-    background: rgba(255, 235, 59, 0.15);
-    transform: scale(1.05);
-}
-
-/* LEFT panel: slant top-right corner is at 65vw from left = 35vw from right.
-   Rotate group -14deg, anchor bottom-right to the slant. */
-.nav-left {
-    top: 18vh;
-    right: 35vw;
-    align-items: flex-end;
-    transform: rotate(-14deg);
-    transform-origin: bottom right;
-}
-
-/* RIGHT panel: slant top-left corner is at ~51vw from left.
-   Rotate group -14deg, anchor bottom-left to the slant. */
-.nav-right {
-    top: 18vh;
-    left: 51vw;
-    align-items: flex-start;
-    transform: rotate(-14deg);
-    transform-origin: bottom left;
-}
-
-/* ====== INNER CONTENT STYLING ====== */
-.content-area h1 {
-    font-size: 3.5rem; 
-    margin-bottom: 1.5rem;
-    color: #ffeb3b;
-    text-shadow: 2px 2px 0px #000;
-}
-
-.architectural-detail {
-    font-size: 1.15rem;
-    line-height: 1.6;
-    color: #cbd5e1;
-    max-width: 100%;
-    /* Forces the text to form a perfect, uniform block on both pages */
-    text-align: justify; 
-}
-
-.architectural-detail strong {
-    color: white;
-}
-
-.scanner-container {
-    border: 2px dashed rgba(255, 255, 255, 0.3);
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-top: 1.5rem;
-    max-width: 450px;
-}
-
-.upload-btn {
-    display: inline-block;
-    background: #ffeb3b;
-    color: black;
-    font-family: "Bangers", sans-serif;
-    font-size: 1.5rem;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.upload-btn:hover {
-    background: white;
-}
-
-/* ====== MOBILE OVERRIDE ====== */
-@media (max-width: 768px) {
-    .home-title {
-        font-size: 4rem; 
-    }
-    
-    .shader-panel {
-        width: 100vw; 
-        clip-path: none; 
-        padding: 100px 20px 40px 20px; /* Safe padding for nav */
-    }
-    
 /* ====== ANGLED NAVIGATION (DESKTOP) ====== */
 .nav-angled {
     position: fixed;
@@ -344,6 +194,79 @@ h1, h2, h3 {
     align-items: flex-start; 
     transform-origin: left center; 
 }
+
+/* ====== INNER CONTENT STYLING ====== */
+.content-area h1 {
+    font-size: 3.5rem; 
+    margin-bottom: 1.5rem;
+    color: #ffeb3b;
+    text-shadow: 2px 2px 0px #000;
+}
+
+.architectural-detail {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    max-width: 100%;
+    text-align: justify; 
+}
+
+.architectural-detail strong {
+    color: white;
+}
+
+.scanner-container {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    max-width: 450px;
+}
+
+.upload-btn {
+    display: inline-block;
+    background: #ffeb3b;
+    color: black;
+    font-family: "Bangers", sans-serif;
+    font-size: 1.5rem;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.upload-btn:hover {
+    background: white;
+}
+
+/* ====== MOBILE OVERRIDE ====== */
+@media (max-width: 768px) {
+    .home-title {
+        font-size: 4rem; 
+    }
+    
+    .shader-panel {
+        width: 100vw; 
+        clip-path: none; 
+        padding: 100px 20px 40px 20px; 
+    }
+    
+    /* MOBILE NAV ADJUSTMENTS (Simplified to sit flat at the top) */
+    .nav-angled {
+        top: 120px; 
+        flex-direction: row; 
+        justify-content: center;
+        width: 100%;
+        left: 0 !important;
+        right: 0 !important;
+        transform: none !important;
+    }
+
+    .nav-left, .nav-right {
+        position: static !important;
+        transform: none !important;
+    }
     
     .content-area {
         padding: 0; 
