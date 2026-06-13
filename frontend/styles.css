@@ -294,17 +294,18 @@ h1, h2, h3 {
         padding: 100px 20px 40px 20px; /* Safe padding for nav */
     }
     
-    /* ====== ANGLED NAVIGATION (DESKTOP) ====== */
+/* ====== ANGLED NAVIGATION (DESKTOP) ====== */
 .nav-angled {
     position: fixed;
+    top: 50%;
     display: flex;
     flex-direction: column;
+    gap: 1.2rem;
     z-index: 20;
-    pointer-events: none; /* Prevents the invisible container from blocking text clicks */
 }
 
 .nav-angled a {
-    pointer-events: auto; /* Re-enables clicking strictly on the buttons */
+    pointer-events: all;
     font-family: "Bangers", sans-serif;
     color: rgba(255, 255, 255, 0.85);
     font-size: 1.8rem; 
@@ -317,8 +318,6 @@ h1, h2, h3 {
     background: rgba(0, 0, 0, 0.45);
     backdrop-filter: blur(4px);
     white-space: nowrap;
-    /* Bulletproof fix to stop the buttons from collapsing onto each other */
-    margin-bottom: 1.5rem; 
 }
 
 .nav-angled a:hover {
@@ -328,24 +327,22 @@ h1, h2, h3 {
     transform: scale(1.05);
 }
 
-/* LEFT PANEL BUTTONS (RECOMMENDER) */
+/* LEFT PANEL BUTTONS */
 .nav-left {
-    /* 🕹️ MANUAL JOYSTICK: Tweak these to pull the buttons UP and LEFT */
-    top: 30vh;  /* Decrease to go UP, Increase to go DOWN */
-    left: 45vw; /* Decrease to go LEFT, Increase to go RIGHT */
-    
-    transform: rotate(-14deg); 
+    left: auto !important; 
+    right: calc(35vw + 12.5vh + 15px); 
+    transform: translateY(-50%) rotate(-14deg); 
     align-items: flex-end; 
+    transform-origin: right center; 
 }
 
-/* RIGHT PANEL BUTTONS (ABOUT) */
+/* RIGHT PANEL BUTTONS */
 .nav-right {
-    /* 🕹️ MANUAL JOYSTICK: Tweak these to pull the buttons UP and LEFT */
-    top: 30vh;  /* Decrease to go UP, Increase to go DOWN */
-    left: 36vw; /* Decrease to go LEFT, Increase to go RIGHT */
-    
-    transform: rotate(14deg); 
+    right: auto !important; 
+    left: calc(35vw + 12.5vh + 15px); 
+    transform: translateY(-50%) rotate(14deg); 
     align-items: flex-start; 
+    transform-origin: left center; 
 }
     
     .content-area {
