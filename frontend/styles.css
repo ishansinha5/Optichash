@@ -140,14 +140,14 @@ h1, h2, h3 {
 }
 
 .nav-left {
-    right: 5%;
-    transform: translateY(-50%) rotate(-9deg); 
+    right: 18%; /* Pushed inward to escape the diagonal slice */
+    transform: translateY(-50%) rotate(-6deg); 
     align-items: flex-end;
 }
 
 .nav-right {
-    left: 5%;
-    transform: translateY(-50%) rotate(-9deg); 
+    left: 18%; /* Pushed inward to escape the diagonal slice */
+    transform: translateY(-50%) rotate(-6deg); 
     align-items: flex-start;
 }
 
