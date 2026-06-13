@@ -5,7 +5,7 @@ from pillow_heif import register_heif_opener
 # 1. Teach PIL how to read Apple HEIC files
 register_heif_opener()
 
-def sanitize_dataset(directory="./data"):
+def sanitize_dataset(directory="./ml-python/dataset"):
     print(f"Initiating Data Normalization in {directory}...")
     converted_count = 0
 

@@ -145,48 +145,30 @@ h1, h2, h3 {
 
 /* ====== ANGLED NAVIGATION (DESKTOP) ====== */
 .nav-angled {
-    position: fixed; 
+    position: fixed;
     top: 50%;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    z-index: 20; 
+    gap: 1.5rem;
+    z-index: 20;
 }
 
+/* LEFT panel (recommender): slant edge is the right side of the panel.
+   Buttons rotate so their BOTTOM-RIGHT corner is pinned to the slant. */
 .nav-left {
-    right: 48vw; /* Anchors the buttons safely INSIDE the left dark panel */
-    transform: translateY(-50%) rotate(-9deg); /* Perfect parallel angle */
+    right: 35vw;
+    transform: translateY(-50%) rotate(-14deg);
+    transform-origin: bottom right;
     align-items: flex-end;
 }
 
+/* RIGHT panel (about): slant edge is the left side of the panel.
+   Buttons rotate so their TOP-LEFT corner is pinned to the slant. */
 .nav-right {
-    left: 48vw; /* Anchors the buttons safely INSIDE the right dark panel */
-    transform: translateY(-50%) rotate(-9deg); /* Perfect parallel angle */
+    left: 35vw;
+    transform: translateY(-50%) rotate(-14deg);
+    transform-origin: top left;
     align-items: flex-start;
-}
-
-/* ====== ANGLED NAVIGATION (DESKTOP) ====== */
-.nav-angled {
-    position: fixed; 
-    top: 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem; /* Tightened the gap so they look like a unified control cluster */
-    z-index: 20; 
-}
-
-.nav-left {
-    right: 44.5vw; /* Anchors perfectly flush against the inside of the right slant */
-    transform: translateY(-50%) rotate(-14deg); /* Steeper angle to perfectly match the clip-path polygon */
-    align-items: flex-end;
-    transform-origin: bottom right; /* Anchors the bottom edge to the slant per your sketch */
-}
-
-.nav-right {
-    left: 44.5vw; /* Anchors perfectly flush against the inside of the left slant */
-    transform: translateY(-50%) rotate(-14deg); /* Steeper angle to perfectly match the clip-path polygon */
-    align-items: flex-start;
-    transform-origin: top left; /* Anchors the top edge to the slant per your sketch */
 }
 
 /* Styled as pill buttons to perfectly match your sketch */
