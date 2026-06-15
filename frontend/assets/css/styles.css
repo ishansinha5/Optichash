@@ -23,7 +23,7 @@ h1, h2, h3 {
 /* ====== HOMEPAGE ====== */
 .homepage-bg {
     background-color: #0f172a; 
-    background-image: url('/../images/wallpaper_for_home.jpg'); 
+    background-image: url('../images/wallpaper_for_home.jpg'); 
     background-size: cover;
     background-position: center;
     filter: blur(5px);
@@ -83,7 +83,7 @@ h1, h2, h3 {
 /* ====== SUBPAGE BACKGROUND ====== */
 .subpage-bg {
     background-color: #0f172a; 
-    background-image: url('/../images/wallpaper_for_home.jpg'); 
+    background-image: url('../images/wallpaper_for_home.jpg'); 
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
