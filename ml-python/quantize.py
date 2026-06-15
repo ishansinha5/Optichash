@@ -1,6 +1,6 @@
 import torch
 import os
-from model import GreenComicVision
+from core.model import GreenComicVision
 
 def execute_green_ai_crunch(fp32_path="comic_vision_fp32.pth", int8_path="comic_vision_int8.pth"):
     print("Initiating Green AI Compression Sequence...")
