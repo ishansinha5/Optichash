@@ -25,22 +25,32 @@
       </p>
       
       <div class="scanner-container">
-      <div class="scanner-buttons">
-        <label class="upload-btn mobile-camera-only">
-          📸 OPEN CAMERA
-          <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" capture="environment" style="display: none;">
-        </label>
+        <div class="scanner-buttons">
+          <label class="upload-btn mobile-camera-only">
+            📸 OPEN CAMERA
+            <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" capture="environment" style="display: none;" onchange="previewAndUpload(event)">
+          </label>
 
-        <label class="upload-btn">
-          📁 UPLOAD FILE
-          <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" style="display: none;">
-        </label>
-      </div>
+          <label class="upload-btn">
+            📁 UPLOAD FILE
+            <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" style="display: none;" onchange="previewAndUpload(event)">
+          </label>
+        </div>
 
-        <p class="preview-text">Preview rendering zone</p>
+        <div style="margin-top: 20px;">
+          <p id="preview-placeholder" class="preview-text">Preview rendering zone</p>
+          <img id="preview-img" style="display: none; max-width: 100%; border-radius: 8px; margin-top: 15px;" />
+        </div>
+
+        <div id="scan-results" style="margin-top: 20px; font-weight: bold; font-size: 1.2em;"></div>
+        
+        <div id="route-indicator" style="margin-top: 10px; color: #a3e635; display: none;"></div>
+
+        <a id="comic-locg-link" href="#" target="_blank" style="display: none; color: #facc15; margin-top: 10px; text-decoration: underline; font-weight: bold;">
+          Link to League of Comic Geeks page
+        </a>
       </div>
     </div>
-
   </div>
 
   <script src="scanner.js"></script>
