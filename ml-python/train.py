@@ -40,7 +40,7 @@ def train_model(data_dir, num_epochs=10):
         print(f"Epoch [{epoch+1}/{num_epochs}] - Training Loss: {running_loss/len(train_loader):.4f}")
 
     # Save the heavy, unquantized FP32 model for the pruning phase later
-    torch.save(model.state_dict(), "comic_vision_fp32.pth")
+    torch.save(model.state_dict(), "weights/comic_vision_fp32.pth")
     print("Base FP32 Model saved. Ready for Green AI Quantization.")
 
 if __name__ == "__main__":
