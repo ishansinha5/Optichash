@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from dataset import get_loaders
+from core.dataset import get_loaders
 from core.model import GreenComicVision
 
 def train_model(data_dir, num_epochs=10):
