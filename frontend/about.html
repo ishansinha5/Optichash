@@ -20,8 +20,8 @@
       <h1>SYSTEM ARCHITECTURE</h1>
       
       <p class="architectural-detail">
-        <strong>The Compute Constraint & Green AI:</strong><br>
-        While deploying an image classifier is straightforward with access to heavy GPU clusters in the cloud, this project was designed around strict, artificial compute constraints. Drawing from enterprise-grade systems engineering, the goal was to architect a "Green AI" microservices pipeline capable of running locally on a standard CPU edge device. By minimizing the computational footprint, we drastically reduce energy consumption and latency while maintaining production-level accuracy for comic book cover identification.
+        <strong>The Compute Constraint & Optimized AI:</strong><br>
+        While deploying an image classifier is straightforward with access to heavy GPU clusters in the cloud, this project was designed around strict, artificial compute constraints. Drawing from enterprise-grade systems engineering, the goal was to architect an "Optimized AI" microservices pipeline capable of running locally on standard CPU edge devices. By minimizing the computational footprint, we drastically reduce energy consumption and latency while maintaining production-level accuracy for comic book cover identification.
       </p>
 
       <p class="architectural-detail" style="margin-top: 1.5rem;">
@@ -30,8 +30,8 @@
       </p>
 
       <p class="architectural-detail" style="margin-top: 1.5rem;">
-        <strong>2. Quantized Edge Compute (PyTorch):</strong><br>
-        When a cache miss occurs (indicating a truly unrecognized or highly distorted image), the payload is conditionally routed to a Python FastAPI endpoint running a PyTorch vision model. To strictly maintain the optimization constraints, the system utilizes a lightweight <i>MobileNetV3</i> backbone. By aggressively pruning weights and applying INT8 Dynamic Quantization (compressing 32-bit floating-point parameters down to highly efficient 8-bit integers), the model achieves near-instant inference with significantly reduced memory utilization and power draw.
+        <strong>2. Machine Learning & Edge Intelligence:</strong><br>
+        When a cache miss occurs, the system triggers the Machine Learning pipeline. The payload is forwarded to a Python FastAPI endpoint running a PyTorch vision model. To strictly maintain optimization, the system utilizes a lightweight <i>MobileNetV3</i> backbone. By aggressively pruning weights and applying INT8 Dynamic Quantization (compressing 32-bit floating-point parameters down to highly efficient 8-bit integers), the model achieves near-instant inference with significantly reduced memory utilization and power draw.
       </p>
     </div>
   </div>
