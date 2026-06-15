@@ -2,7 +2,7 @@ import torch
 import os
 from core.model import GreenComicVision
 
-def execute_green_ai_crunch(fp32_path="comic_vision_fp32.pth", int8_path="comic_vision_int8.pth"):
+def execute_green_ai_crunch(fp32_path="weights/comic_vision_fp32.pth", int8_path="weights/comic_vision_int8.pth"):
     print("Initiating Green AI Compression Sequence...")
     
     # 1. Hardware Check: Quantization MUST happen on the CPU. 
@@ -14,7 +14,7 @@ def execute_green_ai_crunch(fp32_path="comic_vision_fp32.pth", int8_path="comic_
         print(f"Error: {fp32_path} not found. You must run train.py first!")
         return
 
-    model = GreenComicVision(num_classes=5)
+    model = GreenComicVision(num_classes=6)
     model.load_state_dict(torch.load(fp32_path, map_location=device))
     model.eval() # Lock the weights
     
