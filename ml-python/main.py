@@ -1,6 +1,5 @@
 import io
 import torch
-import requests
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
@@ -90,15 +89,32 @@ async def process_comic(file: UploadFile = File(...)):
         final_title = f"Class ID {predicted_id}"
         final_url = None
 
-        try:
-            meta_response = requests.get(f"http://127.0.0.1:8001/metadata/{comic_key}")
-            
-            if (meta_response.status_code == 200):
-                meta_json = meta_response.json()
-                final_title = meta_json["title"]
-                final_url = meta_json["url"]
-        except Exception as e:
-            print(f"Metadata service unreachable: {e}")
+        METADATA_DB = {
+            "absolute_batman_annual_1": {
+                "title": "Absolute Batman #1", 
+                "url": "https://leagueofcomicgeeks.com/comic/6092062/absolute-batman-2025-annual-1"
+            },
+            "absolute_martian_manhunter": {
+                "title": "Absolute Martian Manhunter #1", 
+                "url": "https://leagueofcomicgeeks.com/comic/1616741/absolute-martian-manhunter-8"
+            },
+            "beta_ray_bill_tpb": {
+                "title": "Beta Ray Bill: Argent Star", 
+                "url": "https://leagueofcomicgeeks.com/comic/8509698/beta-ray-bill-argent-star-tp?variant=8271107"
+            },
+            "nightwing_compendium_3": {
+                "title": "Nightwing Compendium Three", 
+                "url": "https://leagueofcomicgeeks.com/comic/3717786/nightwing-a-knight-in-bluedhaven-compendium-book-3-tp"
+            },
+            "transformers_4": {
+                "title": "Transformers #4", 
+                "url": "https://leagueofcomicgeeks.com/comic/4294159/transformers-4?variant=9647505"
+            }
+        }
+
+        if (comic_key in METADATA_DB):
+            final_title = METADATA_DB[comic_key]["title"]
+            final_url = METADATA_DB[comic_key]["url"]
 
         return {
             "status": "success",
@@ -114,4 +130,4 @@ async def process_comic(file: UploadFile = File(...)):
         return {"status": "error", "message": str(e)}
 
 if (__name__ == "__main__"):
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=7860)
