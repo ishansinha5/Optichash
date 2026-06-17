@@ -9,7 +9,7 @@
 
 > [!NOTE]
 > ### System Topology Diagram
-> ![OpticHash System Flow Architecture](assets/images/architecture_diagram.png)
+> ![OpticHash System Flow Architecture](frontend/assets/images/architecture_diagram.png)
 > *Figure 1: Complete end-to-end routing lifecycle of an image request passing from the Vercel edge client through the Java orchestration gateway down to the dual-stage evaluation matrix.*
 
 ### System Design Analysis
