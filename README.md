@@ -1,7 +1,7 @@
 # OpticHash: Distributed Microservices & Compute-Optimized Vision Architecture
 
-**Live Client Deployment:** [[Vercel Portal]]([INSERT_YOUR_VERCEL_URL_HERE])  
-**Live AI Inference Engine:** [[Hugging Face Spaces]]([INSERT_YOUR_HUGGING_FACE_URL_HERE])
+**Deployment:** Native Linux VPS (Docker Compose via GitHub Student Developer Pack)
+**Status:** Proof of Concept (Built for League of Comic Geeks Integration Pitch)
 
 ---
 
@@ -11,70 +11,59 @@
 > ### System Topology Diagram
 > ![OpticHash System Flow Architecture](frontend/assets/images/architecture_diagram.png)
 > 
-*Figure 1: Complete end-to-end routing lifecycle of an image request passing from the Vercel edge client through the Java orchestration gateway down to the dual-stage evaluation matrix.*
+> *Figure 1: Complete routing lifecycle of an image request passing from the Vercel edge client, through the Java orchestration gateway, into the C++ memory map, and finally falling back to the Python neural engine.*
 
 ### System Design Analysis
-The topology above illustrates the strict decoupling of this project's verification process. When an asset payload enters the ecosystem, it is directed to a Java routing gateway. Rather than immediately initializing deep learning compute matrices, the pipeline enforces a critical performance gate: the binary data drops into a native C++ microservice layer. If a Perceptual Hash match exists in our schema index, the system intercepts the asset and exits immediately with zero network hops. Novel assets route directly to the deep neural network.
+As a computer science student diving into enterprise backend systems, I wanted to understand how to build resilient, scalable architectures. This topology illustrates a strict decoupling of the verification process. When an image payload enters the ecosystem, it hits a Java routing gateway. Rather than immediately initializing deep learning compute matrices, the pipeline enforces a critical performance gate: the data drops into a native C++ microservice. If a Perceptual Hash match exists in our local memory map, the system intercepts the asset and exits immediately with zero deep-learning network hops. Novel assets bypass this and route directly to the neural network.
 
 ---
 
 ## The Core Question: Can We Decouple Machine Learning from Monolithic Compute Waste?
 
-Computer vision pipelines are an environmental and financial liability. In enterprise asset management or retail lookups, brute-forcing every incoming image request through heavy convolutional neural networks or transformer layers is a massive over-allocation of resources. If a user uploads an image of an asset that has already been analyzed and cataloged, invoking millions of matrix multiplication operations on a GPU cluster is completely unnecessary.
+Computer vision pipelines can be an environmental and financial liability. Brute-forcing every incoming image request through heavy convolutional neural networks is a massive over-allocation of resources. If a user uploads an image of a comic book that has already been scanned and cataloged, invoking millions of matrix multiplication operations on a server is completely unnecessary.
 
-I built this distributed, hardware-aware computer vision pipeline to solve that specific architectural inefficiency. OpticHash uses a distinct two-stage evaluation matrix to guard the machine learning layer. By checking inputs at the byte level before initializing complex neural inference, this project proves that software architecture choices can directly reduce electrical overhead, memory footprint, and hosting costs.
+I built this distributed, hardware-aware computer vision pipeline as a proof of concept to solve that specific architectural inefficiency. OpticHash uses a two-stage evaluation matrix to guard the machine learning layer. By checking inputs at the byte level before initializing complex neural inference, this project aims to prove that smart software architecture choices can directly reduce electrical overhead and hosting costs.
 
 ---
 
 ## The Distributed Tech Stack & Architecture
 
-To achieve this level of performance isolation, I broke down the application into specialized, decoupled microservices orchestrated via Docker Compose within a local WSL environment:
+To achieve this performance isolation, I broke the application down into specialized microservices orchestrated via Docker Compose:
 
-* **Zone 1: The Presentation Client (Frontend):** A responsive, zero-bloat web application written in standard vanilla JavaScript and deployed at the edge via Vercel. It features automated file preprocessing, state tracking, and explicit telemetry capture.
-* **Zone 2: The Core Routing Gateway (Java Spring Boot):** The central business logic layer. It orchestrates service discovery, handles network message serialization, and acts as the secure entry point for all client-side processing operations.
-* **Zone 3: The Perceptual Bouncer (Native C++):** A high-performance microservice that computes geometric image hashes at the hardware level. It cross-references an indexed relational table; if an asset matches, it bypasses the neural network completely, serving data instantaneously and saving up to ~90% of typical compute cycles.
-* **Zone 4: The Edge Neural Brain (Python FastAPI):** Triggered strictly when the C++ gatekeeper encounters a completely new or unhashed image cover. It hosts custom computer vision weights via a clean, high-throughput REST API.
-* **Zone 5: Spatial Optimization Schema (PostgreSQL/PostGIS):** An enterprise-ready persistence layer initialized with robust indexing. It handles spatial coordinates for nearby store lookups alongside structural image hash indices.
+* **Zone 1: The Presentation Client (Frontend):** A responsive web application written in standard vanilla JavaScript. It handles automated file preprocessing and explicit telemetry capture.
+* **Zone 2: The Core Routing Gateway (Java Spring Boot):** The central traffic controller. It orchestrates service discovery, handles network message serialization, and executes the dynamic cache write-back loops.
+* **Zone 3: The Perceptual Bouncer (Native C++):** A high-performance microservice that computes geometric image hashes at the hardware level. If an asset matches, it bypasses the neural network completely, serving data instantaneously and dynamically tracking the exact compute footprint saved.
+* **Zone 4: The Edge Neural Brain (Python FastAPI):** Triggered strictly when the C++ gatekeeper encounters a completely new image. It hosts custom computer vision weights and calculates the exact mathematical weight of its own inferences using `fvcore`.
 
 ---
 
 ## Engineering For Optimized AI Efficiency
 
-The true power of this project lies in how the underlying software architecture protects system resources. Deep learning model optimization must look beyond raw software layers down to hardware power telemetry:
+The true power of this project lies in how the underlying software architecture protects system resources:
 
-1. **INT8 Dynamic Quantization:** Rather than deploying large FP32 weight matrices, the PyTorch model undergoes an aggressive quantization pass via `torchao`. Compressing the neural node values down to 8-bit dynamic integers keeps the volatile memory footprint incredibly low, allowing the pipeline to maintain fast execution speeds directly on consumer-tier CPUs.
-2. **Logit Temperature Scaling:** To prevent low-confidence predictions from polluting system data, the inference script routes raw logits through a custom temperature divider ($T = 2.0$) prior to calculating softmax probabilities. This smooths out potential anomalies and guarantees mathematical integrity.
-3. **The Zero-Network-Hop Monolith Strategy:** For the lightweight production environment on Hugging Face Spaces, the metadata index is encapsulated as a flat, local dictionary directly alongside the model. This intentional structural optimization eliminates unnecessary internal database connections and optimizes performance.
-
----
-
-## Proof of Concept: Hardware-Aware System Telemetry
-
-> [!IMPORTANT]
-> ### System Operation Demonstration
-> [Link to Proof of Concept Video: Local Pipeline Operations](assets/demo.mp4)
-> *Our full end-to-end operation running locally under a full multi-container Docker Compose build environment.*
-
-### Technical Telemetry Breakdown
-The screen capture highlights the dual-stage evaluation matrix in real time. On the left side of the frame, the Vercel instance triggers a series of scan requests. On the right, the running Docker logs provide clear evidence of the routing system. When an image matching an indexed cover is submitted, the terminal prints `[phash_bouncer] Match Found - Route: PHASH_CPP`. The response payload completes instantly, displaying zero compute cycles consumed. When an unindexed cover is passed, the C++ filter steps aside, and the logs document the activation of the FastAPI worker as it executes quantized INT8 matrix operations.
+1. **Self-Aware Telemetry:** The Python engine dynamically profiles itself on startup. For our custom 6-class MobileNetV3 model, it identified an exact footprint of 58,631,680 FLOPs (Floating Point Operations). The system passes this telemetry across all three microservices to accurately report how much compute is bypassed on a cache hit. 
+2. **INT8 Dynamic Quantization:** Rather than deploying large FP32 weight matrices, the PyTorch model undergoes an aggressive quantization pass via `torchao`. Compressing the neural node values down to 8-bit dynamic integers keeps the volatile memory footprint incredibly low.
+3. **The Telemetry Write-Back Loop:** When Python encounters a new image, the Java Gateway catches the resulting metadata and FLOP count, and fires it backward into the C++ memory map. The system actively learns and self-optimizes in real time.
 
 ---
 
 ## Local Development & Orchestration
 
-This entire stack is designed to be fully reproducible across environments. You can pull the multi-container configuration down locally via the following workflow:
+This stack is designed to be fully reproducible across environments, running flawlessly on a native Linux VPS or a local machine.
 
 1. **Clone the Repository:**
 ```bash
    git clone [https://github.com/ishansinha5/OpticHash.git](https://github.com/ishansinha5/OpticHash.git)
    cd OpticHash
-2. **Sync the Production Weights:** Ensure that your local python folder contains the compiled model binary file under `ml-python/weights/comic_vision_int8.pth`.
+   
+2. **Sync the Production Weights**: Ensure your local folder contains the compiled model binary file under ml-python/weights/comic_vision_int8.pth.
 
-3. **Orchestrate the Container Cluster:** Run the environment cluster using Docker Compose:
-   ```bash
-   docker-compose up --build
+3. **Orchestrate the Container Cluster**: Run the environment cluster using Docker Compose:
+docker compose up -d --build
 
-4. **Verify Endpoint Status: **
-- Frontend Application Portal: http://localhost:3000
-- Java API Gateway Endpoint: http://localhost:8080
-- Python Deep Learning Inference Space: http://localhost:7860
+4. **Verify Endpoint Status*:
+Frontend Application Portal: cd frontend && python3 -m http.server 3000
+
+Java API Gateway Endpoint: http://localhost:8080
+
+Python Deep Learning Inference: http://localhost:7860
