@@ -53,7 +53,7 @@ This stack is designed to be fully reproducible across environments, running fla
 
 1. **Clone the Repository:**
    - git clone [https://github.com/ishansinha5/OpticHash.git]     (https://github.com/ishansinha5/OpticHash.git)
-cd OpticHash
+   - cd OpticHash
 
 2. **Sync the Production Weights**: 
    - Ensure your local folder contains the compiled model binary file under ml-python/weights/comic_vision_int8.pth.
