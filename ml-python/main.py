@@ -10,6 +10,7 @@ from torchao.quantization import quantize_, Int8DynamicActivationInt8WeightConfi
 
 app = FastAPI()
 
+# SECURITY NOTE: In production, change "*" to your actual domain
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,6 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Initialize Inference Engine
 device = torch.device("cpu")
 print(f"Inference Engine booting on: {device}")
 
@@ -40,6 +42,15 @@ preprocess = v2.Compose([
     v2.ToDtype(torch.float32, scale=True),
     v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
+
+METADATA_DB = {
+    0: {"title": "Absolute Batman Annual #1", "url": "https://leagueofcomicgeeks.com/comic/6092062/absolute-batman-2025-annual-1"},
+    1: {"title": "Absolute Martian Manhunter #8", "url": "https://leagueofcomicgeeks.com/comic/1616741/absolute-martian-manhunter-8"},
+    2: {"title": "Beta Ray Bill: Argent Star (TPB)", "url": "https://leagueofcomicgeeks.com/comic/8509698/beta-ray-bill-argent-star-tp?variant=8271107"},
+    3: {"title": "Junk", "url": None},
+    4: {"title": "Nightwing: A Knight in Blüdhaven (Compendium Three)", "url": "https://leagueofcomicgeeks.com/comic/3717786/nightwing-a-knight-in-bluedhaven-compendium-book-3-tp"},
+    5: {"title": "Transformers #4 (Variant Cover)", "url": "https://leagueofcomicgeeks.com/comic/4294159/transformers-4?variant=9647505"}
+}
 
 @app.post("/process")  
 async def process_comic(file: UploadFile = File(...)):
@@ -68,61 +79,24 @@ async def process_comic(file: UploadFile = File(...)):
                 "status": "error",
                 "message": f"Low confidence match ({confidence_score * 100:.1f}%). Please ensure the cover is clearly visible."
             }
-
-        CLASS_MAP = {
-            0: "absolute_batman_annual_1",
-            1: "absolute_martian_manhunter",
-            2: "beta_ray_bill_tpb",
-            3: "junk",
-            4: "nightwing_compendium_3",
-            5: "transformers_4"
-        }
         
-        comic_key = CLASS_MAP[predicted_id]
-        
-        if (comic_key == "junk"):
+        # Check for Junk/Noise class (ID 3)
+        if (predicted_id == 3):
             return {
                 "status": "error",
-                "message": "Image recognized as generic background noise."
+                "message": "generic background noise"
             }
 
-        final_title = f"Class ID {predicted_id}"
-        final_url = None
-
-        METADATA_DB = {
-            "absolute_batman_annual_1": {
-                "title": "Absolute Batman Annual #1", 
-                "url": "https://leagueofcomicgeeks.com/comic/6092062/absolute-batman-2025-annual-1"
-            },
-            "absolute_martian_manhunter": {
-                "title": "Absolute Martian Manhunter #8", 
-                "url": "https://leagueofcomicgeeks.com/comic/1616741/absolute-martian-manhunter-8"
-            },
-            "beta_ray_bill_tpb": {
-                "title": "Beta Ray Bill: Argent Star (TPB)", 
-                "url": "https://leagueofcomicgeeks.com/comic/8509698/beta-ray-bill-argent-star-tp?variant=8271107"
-            },
-            "nightwing_compendium_3": {
-                "title": "Nightwing: A Knight in Bludhaven (Compendium Three)", 
-                "url": "https://leagueofcomicgeeks.com/comic/3717786/nightwing-a-knight-in-bluedhaven-compendium-book-3-tp"
-            },
-            "transformers_4": {
-                "title": "Transformers #4 (Variant Cover)", 
-                "url": "https://leagueofcomicgeeks.com/comic/4294159/transformers-4?variant=9647505"
-            }
-        }
-
-        if (comic_key in METADATA_DB):
-            final_title = METADATA_DB[comic_key]["title"]
-            final_url = METADATA_DB[comic_key]["url"]
+        comic_data = METADATA_DB.get(predicted_id, {"title": f"Class ID {predicted_id}", "url": None})
 
         return {
             "status": "success",
             "optimization_route": "inference_python",
             "predicted_id": predicted_id,
-            "title": final_title,
-            "url": final_url,
+            "title": comic_data["title"],
+            "url": comic_data["url"],
             "confidence": f"{confidence_score * 100:.1f}%",
+            "generated_hash": "...",
             "compute_cycles_saved": 0
         }
         

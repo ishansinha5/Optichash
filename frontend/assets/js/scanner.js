@@ -39,7 +39,7 @@ async function previewAndUpload(event) {
         const data = await response.json();
         console.log("Gateway Response:", data);
 
-        if (data.status === "success") {
+        if (data.status === "success" || data.status === "cached_hit") {
             // Display title if available, otherwise display the raw model class ID
             let matchName = "";
             if (data.title !== undefined) {

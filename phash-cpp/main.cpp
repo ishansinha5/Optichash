@@ -1,17 +1,17 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include "httplib.h"
-#include <pqxx/pqxx>
 #include <opencv2/opencv.hpp>
 
 using namespace std;
 
-const string DB_CONN_STR = "postgresql://admin:enterprise_secure@spatial_db:5432/comicdb";
-
 // The enterprise fuzzy-matching logic
 int calculate_hamming_distance(const string& hash1, const string& hash2) {
-    if (hash1.length() != hash2.length()) return 64; // Fallback to max distance if sizes mismatch
+    if (hash1.length() != hash2.length()) {
+        return 64; 
+    }
     int distance = 0;
     for (size_t i = 0; i < hash1.length(); ++i) {
         if (hash1[i] != hash2[i]) {
@@ -25,7 +25,9 @@ string calculate_phash(const string& image_data) {
     try {
         vector<char> data(image_data.begin(), image_data.end());
         cv::Mat img = cv::imdecode(data, cv::IMREAD_GRAYSCALE);
-        if (img.empty()) return "INVALID_IMAGE_DATA";
+        if (img.empty()) {
+            return "INVALID_IMAGE_DATA";
+        }
 
         cv::resize(img, img, cv::Size(32, 32));
         img.convertTo(img, CV_32F);
@@ -36,7 +38,9 @@ string calculate_phash(const string& image_data) {
         double sum = 0.0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (i == 0 && j == 0) continue; 
+                if (i == 0 && j == 0) {
+                    continue; 
+                }
                 sum += topLeft.at<float>(i, j);
             }
         }
@@ -63,7 +67,26 @@ string calculate_phash(const string& image_data) {
 int main() {
     httplib::Server svr;
 
-    svr.Post("/api/analyze-cover", [](const httplib::Request& req, httplib::Response& res) {
+    // [DEMO MODE] Hardcoded memory map to fake the write-back cache
+    std::unordered_map<string, string> known_hashes = {
+        {"1000010111000001000010100101100101111111010101000101101001101110", "Nightwing: A Knight in Blüdhaven Compendium Three"}
+    };
+
+    // FIX: [&known_hashes] captures the map by reference so the lambda can modify it
+    svr.Post("/api/cache-update", [&known_hashes](const httplib::Request& req, httplib::Response& res) {
+        cout << "[C++ Bouncer] Received new cache entry." << endl;
+        
+        size_t hash_pos = req.body.find("hash\":\"") + 7;
+        string hash = req.body.substr(hash_pos, req.body.find("\"", hash_pos) - hash_pos);
+        
+        size_t title_pos = req.body.find("title\":\"") + 8;
+        string title = req.body.substr(title_pos, req.body.find("\"", title_pos) - title_pos);
+
+        known_hashes[hash] = title;
+        res.set_content("{\"status\": \"cache_updated\"}", "application/json");
+    });
+
+    svr.Post("/api/analyze-cover", [&known_hashes](const httplib::Request& req, httplib::Response& res) {
         try {
             string image_hash = calculate_phash(req.body);
             
@@ -75,35 +98,24 @@ int main() {
 
             cout << "\n[C++ Bouncer] pHash Generated: " << image_hash << endl;
 
-            pqxx::connection C(DB_CONN_STR);
-            pqxx::nontransaction N(C);
-            
-            // We fetch all hashes to compare them in memory
-            string query = "SELECT id, phash FROM locg_variants";
-            pqxx::result R = N.exec(query);
-
             bool cache_hit = false;
-            string matched_id = "";
+            string matched_title = "";
 
-            for (auto row : R) {
-                string db_hash = row[1].c_str();
-                int dist = calculate_hamming_distance(image_hash, db_hash);
-                
-                // If the distance is within our threshold (e.g., 10 bits), we consider it the same comic
-                if (dist <= 10) {
+            for (const auto& pair : known_hashes) {
+                if (calculate_hamming_distance(image_hash, pair.first) <= 10) {
                     cache_hit = true;
-                    matched_id = row[0].c_str();
+                    matched_title = pair.second;
                     break;
                 }
             }
 
             if (cache_hit) {
-                res.set_content("{\"status\": \"cached_hit\", \"optimization_route\": \"cache_hit_cpp\", \"variant_id\": " + matched_id + "}", "application/json");
+                string json_res = "{\"status\": \"cached_hit\", \"optimization_route\": \"CACHED_HIT_CPP\", \"compute_cycles_saved\": 1, \"title\": \"" + matched_title + "\"}";
+                res.set_content(json_res, "application/json");
             } else {
                 res.set_content("{\"status\": \"cache_miss\", \"optimization_route\": \"inference_python\", \"generated_hash\": \"" + image_hash + "\"}", "application/json");
             }
         } catch (const std::exception &e) {
-            cerr << "Database Error: " << e.what() << endl;
             res.status = 500;
             res.set_content("{\"status\": \"error\", \"message\": \"" + string(e.what()) + "\"}", "application/json");
         }
