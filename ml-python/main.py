@@ -7,6 +7,7 @@ from torchvision.transforms import v2
 from core.model import GreenComicVision
 import uvicorn
 from torchao.quantization import quantize_, Int8DynamicActivationInt8WeightConfig
+from fvcore.nn import FlopCountAnalysis
 
 app = FastAPI()
 
@@ -24,6 +25,16 @@ device = torch.device("cpu")
 print(f"Inference Engine booting on: {device}")
 
 model = GreenComicVision(num_classes=6)
+model.eval()
+
+# 1. PROFILE FIRST: Trace the architecture before quantization alters the datatypes
+print("Profiling model footprint...")
+dummy_input = torch.randn(1, 3, 224, 224)
+flops_counter = FlopCountAnalysis(model, dummy_input)
+EXACT_FLOPS = flops_counter.total()
+print(f"Computed model footprint: {EXACT_FLOPS} FLOPs")
+
+# 2. QUANTIZE SECOND: Now compress the model for Green AI inference
 quantize_(model, Int8DynamicActivationInt8WeightConfig())
 
 weights_path = "weights/comic_vision_int8.pth"
@@ -34,7 +45,6 @@ except Exception as e:
     print(f"ERROR loading weights: {e}")
 
 model.to(device)
-model.eval()
 
 preprocess = v2.Compose([
     v2.Resize((224, 224)),
@@ -97,7 +107,8 @@ async def process_comic(file: UploadFile = File(...)):
             "url": comic_data["url"],
             "confidence": f"{confidence_score * 100:.1f}%",
             "generated_hash": "...",
-            "compute_cycles_saved": 0
+            "compute_cycles_saved": 0,
+            "model_flops": EXACT_FLOPS
         }
         
     except Exception as e:

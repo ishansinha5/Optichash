@@ -7,6 +7,12 @@
 
 using namespace std;
 
+// Define the new storage structure to hold both Title and FLOPs
+struct CacheEntry {
+    string title;
+    long long flops;
+};
+
 // The enterprise fuzzy-matching logic
 int calculate_hamming_distance(const string& hash1, const string& hash2) {
     if (hash1.length() != hash2.length()) {
@@ -67,26 +73,39 @@ string calculate_phash(const string& image_data) {
 int main() {
     httplib::Server svr;
 
-    // [DEMO MODE] Hardcoded memory map to fake the write-back cache
-    std::unordered_map<string, string> known_hashes = {
-        {"1000010111000001000010100101100101111111010101000101101001101110", "Nightwing: A Knight in Blüdhaven Compendium Three"}
+    // [DEMO MODE] Memory map upgraded to hold CacheEntry structs
+    static std::unordered_map<string, CacheEntry> known_hashes = {
+        {"1000010111000001000010100101100101111111010101000101101001101110", {"Nightwing: A Knight in Blüdhaven Compendium Three", 58631680}}
     };
 
-    // FIX: [&known_hashes] captures the map by reference so the lambda can modify it
-    svr.Post("/api/cache-update", [&known_hashes](const httplib::Request& req, httplib::Response& res) {
-        cout << "[C++ Bouncer] Received new cache entry." << endl;
+    // Endpoint 1: The Write-Back Receiver (Now captures FLOPs)
+    svr.Post("/api/cache-update", [](const httplib::Request& req, httplib::Response& res) {
+        cout << "[C++ Bouncer] Received new cache entry with telemetry." << endl;
         
+        // Parse Hash
         size_t hash_pos = req.body.find("hash\":\"") + 7;
         string hash = req.body.substr(hash_pos, req.body.find("\"", hash_pos) - hash_pos);
         
+        // Parse Title
         size_t title_pos = req.body.find("title\":\"") + 8;
         string title = req.body.substr(title_pos, req.body.find("\"", title_pos) - title_pos);
 
-        known_hashes[hash] = title;
+        // Parse FLOPs safely
+        long long extracted_flops = 0;
+        size_t flops_pos = req.body.find("flops\":");
+        if (flops_pos != string::npos) {
+            flops_pos += 7;
+            string flops_str = req.body.substr(flops_pos, req.body.find("}", flops_pos) - flops_pos);
+            extracted_flops = std::stoll(flops_str);
+        }
+
+        // Store both pieces of data in the map
+        known_hashes[hash] = {title, extracted_flops};
         res.set_content("{\"status\": \"cache_updated\"}", "application/json");
     });
 
-    svr.Post("/api/analyze-cover", [&known_hashes](const httplib::Request& req, httplib::Response& res) {
+    // Endpoint 2: The Analyzer
+    svr.Post("/api/analyze-cover", [](const httplib::Request& req, httplib::Response& res) {
         try {
             string image_hash = calculate_phash(req.body);
             
@@ -100,17 +119,20 @@ int main() {
 
             bool cache_hit = false;
             string matched_title = "";
+            long long saved_flops = 0;
 
             for (const auto& pair : known_hashes) {
                 if (calculate_hamming_distance(image_hash, pair.first) <= 10) {
                     cache_hit = true;
-                    matched_title = pair.second;
+                    matched_title = pair.second.title;
+                    saved_flops = pair.second.flops;
                     break;
                 }
             }
 
             if (cache_hit) {
-                string json_res = "{\"status\": \"cached_hit\", \"optimization_route\": \"CACHED_HIT_CPP\", \"compute_cycles_saved\": 1, \"title\": \"" + matched_title + "\"}";
+                // Dynamically return the specific FLOP count saved for this image
+                string json_res = "{\"status\": \"cached_hit\", \"optimization_route\": \"CACHED_HIT_CPP\", \"compute_cycles_saved\": " + std::to_string(saved_flops) + ", \"title\": \"" + matched_title + "\"}";
                 res.set_content(json_res, "application/json");
             } else {
                 res.set_content("{\"status\": \"cache_miss\", \"optimization_route\": \"inference_python\", \"generated_hash\": \"" + image_hash + "\"}", "application/json");

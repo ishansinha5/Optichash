@@ -42,6 +42,7 @@ async function previewAndUpload(event) {
         if (data.status === "success" || data.status === "cached_hit") {
             // Display title if available, otherwise display the raw model class ID
             let matchName = "";
+            
             if (data.title !== undefined) {
                 matchName = data.title;
             } else {
@@ -50,7 +51,27 @@ async function previewAndUpload(event) {
 
             resultsDiv.innerText = " MATCH FOUND: " + matchName;
             
-            routeIndicator.innerText = "Optimization Route: " + data.optimization_route.toUpperCase() + "\nCompute Footprint Saved: " + data.compute_cycles_saved;
+            // Conditional Green AI Telemetry
+            if (data.compute_cycles_saved > 0) {
+                let formattedFlops = (data.compute_cycles_saved / 1000000).toFixed(1) + " Million";
+                
+                routeIndicator.innerHTML = `
+                    <strong>Optimization Route:</strong> ${data.optimization_route.toUpperCase()}<br>
+                    <strong>Compute Footprint Saved:</strong> ${formattedFlops} FLOPs<br>
+                    <hr style="border: 0; height: 1px; background: #333; margin: 10px 0;">
+                    <span style="font-size: 0.85em; font-style: italic; color: #aaa;">
+                        *FLOPs (Floating Point Operations) represent the raw math calculations required by the AI. By caching this pHash locally in C++, we bypassed the PyTorch engine entirely—conserving electricity and zeroing out the compute footprint.
+                    </span>
+                `;
+                routeIndicator.style.backgroundColor = "rgba(0, 255, 0, 0.1)"; 
+            } else {
+                routeIndicator.innerHTML = `
+                    <strong>Optimization Route:</strong> ${data.optimization_route.toUpperCase()}<br>
+                    <strong>Compute Footprint Saved:</strong> 0 FLOPs
+                `;
+                routeIndicator.style.backgroundColor = "transparent";
+            }
+            
             routeIndicator.style.display = "block";
 
             if (data.url !== undefined) {

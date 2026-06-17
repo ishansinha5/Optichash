@@ -5,7 +5,7 @@
 torch==2.12.0
 torchvision==0.27.0
 torchao==0.17.0
-
+fvcore
 # API & Web Routing
 fastapi==0.137.0
 uvicorn==0.49.0
