@@ -52,18 +52,17 @@ The true power of this project lies in how the underlying software architecture 
 This stack is designed to be fully reproducible across environments, running flawlessly on a native Linux VPS or a local machine.
 
 1. **Clone the Repository:**
-
-git clone [https://github.com/ishansinha5/OpticHash.git](https://github.com/ishansinha5/OpticHash.git)
+   - git clone [https://github.com/ishansinha5/OpticHash.git]     (https://github.com/ishansinha5/OpticHash.git)
 cd OpticHash
 
-2. **Sync the Production Weights**: Ensure your local folder contains the compiled model binary file under ml-python/weights/comic_vision_int8.pth.
+2. **Sync the Production Weights**: 
+   - Ensure your local folder contains the compiled model binary file under ml-python/weights/comic_vision_int8.pth.
 
 3. **Orchestrate the Container Cluster**: Run the environment cluster using Docker Compose:
-docker compose up -d --build
+   - docker compose up -d --build
 
 4. **Verify Endpoint Status*:
-Frontend Application Portal: cd frontend && python3 -m http.server 3000
-
-Java API Gateway Endpoint: http://localhost:8080
-
-Python Deep Learning Inference: http://localhost:7860
+Frontend Application Portal: 
+   - cd frontend && python3 -m http.server 3000
+   - Java API Gateway Endpoint: http://localhost:8080
+   - Python Deep Learning Inference: http://localhost:7860
