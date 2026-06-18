@@ -189,8 +189,8 @@ h1, h2, h3 {
 }
 
 /* Stagger the 1st button to pull it back in line */
-.nav-left a:nth-child(1) { margin-left: 45px; }
-.nav-right a:nth-child(1) { margin-right: 45px; }
+.nav-left a:nth-child(1) { margin-left: 55px; }
+.nav-right a:nth-child(1) { margin-right: 55px; }
 
 /* Stagger the 3rd button to physically inch it outwards */
 .nav-left a:nth-child(3) { margin-right: 30px; }
