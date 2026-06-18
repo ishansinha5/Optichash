@@ -188,6 +188,10 @@ h1, h2, h3 {
     align-items: flex-start; 
 }
 
+/* Stagger the 3rd button to physically inch it outwards */
+.nav-left a:nth-child(3) { margin-right: 30px; }
+.nav-right a:nth-child(3) { margin-left: 30px; }
+
 /* ====== INNER CONTENT STYLING ====== */
 .content-area h1 {
     font-size: 3.5rem; 
@@ -215,22 +219,18 @@ h1, h2, h3 {
     padding: 2rem;
     margin-top: 1.5rem;
     max-width: 450px;
-    
-    /* 1. The Flexbox Centering Magic */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    
-    /* 2. Give the box some physical height so it isn't flat */
     min-height: 250px; 
-    gap: 2rem; /* Adds space between the buttons and the preview text */
+    gap: 2rem; 
 }
 
 .scanner-buttons {
     display: flex;
-    gap: 1.5rem; /* Space between the two buttons */
-    flex-wrap: wrap; /* Prevents them from squishing on tiny screens */
+    gap: 1.5rem; 
+    flex-wrap: wrap; 
     justify-content: center;
 }
 
@@ -246,16 +246,16 @@ h1, h2, h3 {
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.2s;
-}
-
-/* Hides the camera button on desktop/laptops */
-.mobile-camera-only {
-    display: none !important; 
+    text-decoration: none;
 }
 
 .upload-btn:hover {
     background: white;
-    transform: scale(1.05); /* Slight pop effect on hover */
+    transform: scale(1.05); 
+}
+
+.mobile-camera-only {
+    display: none !important; 
 }
 
 .preview-text {
@@ -264,72 +264,84 @@ h1, h2, h3 {
     margin: 0;
 }
 
-.upload-btn:hover {
-    background: white;
-}
+/* ====== NEW RESOURCES PAGE COMPONENTS ====== */
 
-/* Centered Navigation for Resources Page */
+/* Center Navigation for Resources Page (Horizontal Row) */
 .nav-center {
+    flex-direction: row !important;
+    transform: none !important;
+    top: 4vh !important;
+    left: 0 !important;
+    right: 0 !important;
     justify-content: center;
-    left: 0;
-    right: 0;
+    width: 100%;
 }
 
 /* Center Trapezoid Shader Panel */
 .panel-trapezoid {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 65vw;
-    height: 85vh;
-    background: rgba(10, 10, 10, 0.90);
-    /* Creates the upward-facing trapezoid shape */
-    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    width: 85vw; /* Widened */
+    height: 85vh; /* Firmly touches the bottom */
+    background: rgba(10, 10, 10, 0.93);
+    clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 80px;
+    flex-direction: column;
+    align-items: center;
+    padding: 8vh 5vw 0 5vw;
+    overflow-y: auto; /* Allow internal scrolling */
+    z-index: 10;
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
 }
 
-/* Ensure content stays within the narrow top of the trapezoid */
 .panel-trapezoid .content-area {
-    max-width: 70%;
+    max-width: 80%;
     text-align: center;
+    margin-top: 0;
+    padding-bottom: 50px;
 }
+
 /* ====== MOBILE OVERRIDE ====== */
 @media (max-width: 500px) {
     .home-title { font-size: 4rem; }
     
-    .shader-panel { 
+    .shader-panel, .panel-trapezoid { 
         width: 100vw; 
+        height: 100vh;
         clip-path: none; 
         padding: 100px 20px 40px 20px; 
     }
     
     .nav-angled { 
-        /* Drops the buttons perfectly into the 100px padding gap at the top */
         top: 30px !important; 
-        flex-direction: row; 
+        flex-direction: row !important; 
         justify-content: center; 
+        flex-wrap: wrap;
         width: 100%; 
         left: 0 !important; 
         right: 0 !important; 
         transform: none !important; 
-        z-index: 100 !important; /* Bulletproofs the layering over the shader panel */
+        z-index: 100 !important; 
     }
     
     .nav-left, .nav-right { 
-        /* Only kills the desktop rotation, keeps the fixed position intact */
         transform: none !important; 
     }
+
+    /* Remove the stagger on mobile since they are horizontal */
+    .nav-left a:nth-child(3), .nav-right a:nth-child(3) { margin: 0; }
     
-    .content-area { padding: 0; margin: 0; }
+    .content-area, .panel-trapezoid .content-area { 
+        padding: 0; 
+        margin: 0; 
+        max-width: 100%;
+    }
     .content-area h1 { font-size: 2.5rem; }
     .architectural-detail { text-align: left; font-size: 1rem; }
     .home-buttons { flex-direction: column; width: 90%; }
     .btn { width: 100%; text-align: center; box-sizing: border-box; }
     
-    /* Un-hides the camera button on mobile */
     .mobile-camera-only { display: inline-flex !important; }
 }

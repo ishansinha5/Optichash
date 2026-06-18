@@ -20,23 +20,27 @@
     <div class="content-area">
       <h1 style="text-align: center;">SYSTEM RESOURCES</h1>
       
-      <p class="architectural-detail" style="margin-top: 2rem;">
+      <p class="architectural-detail" style="margin-top: 2rem; text-align: center;">
         <strong>Evaluating the Pipeline</strong><br>
         To properly test the telemetry and optimization routing of the OpticHash system, you need clean baseline data. This resource kit provides direct access to our system demonstration and guaranteed-hit testing assets so you can verify the exact compute footprint reduction (FLOPs saved) during a spatial cache hit.
       </p>
 
       <div style="display: flex; justify-content: center; gap: 20px; margin-top: 3rem; flex-wrap: wrap;">
         
-        <div style="background: #111; padding: 30px; border: 1px solid #333; border-radius: 8px; flex: 1; min-width: 250px;">
-            <h3 style="color: #FFD700; margin-bottom: 15px;">System Demo</h3>
-            <p style="color: #ccc; font-size: 0.9em; margin-bottom: 30px;">Watch the full end-to-end operation of the multi-container Docker environment.</p>
-            <a href="https://youtu.be/i8L5bwY-MSA" target="_blank" class="upload-btn" style="display: inline-block; text-decoration: none;">▶ WATCH VIDEO</a>
+        <div style="background: #111; padding: 20px; border: 1px solid #333; border-radius: 8px; flex: 1; min-width: 250px; display: flex; flex-direction: column; align-items: center;">
+            <h3 style="color: #FFD700; margin-bottom: 10px;">System Demo</h3>
+            <p style="color: #ccc; font-size: 0.9em; margin-bottom: 25px; text-align: center;">Watch the full end-to-end operation of the multi-container Docker environment.</p>
+            <nav class="nav-angled" style="position: static; flex-direction: row; transform: none; gap: 0;">
+                <a href="https://youtu.be/i8L5bwY-MSA" target="_blank" style="font-size: 1.1rem; padding: 8px 18px;">▶ WATCH VIDEO</a>
+            </nav>
         </div>
 
-        <div style="background: #111; padding: 30px; border: 1px solid #333; border-radius: 8px; flex: 1; min-width: 250px;">
-            <h3 style="color: #0ea5e9; margin-bottom: 15px;">Test Asset Kit</h3>
-            <p style="color: #ccc; font-size: 0.9em; margin-bottom: 30px;">Download a randomly selected, pre-verified comic cover to test the routing gateway.</p>
-            <button onclick="downloadRandomTestImage()" class="upload-btn" style="border: none; cursor: pointer; font-family: inherit; font-size: inherit;">📥 DOWNLOAD TEST COVER</button>
+        <div style="background: #111; padding: 20px; border: 1px solid #333; border-radius: 8px; flex: 1; min-width: 250px; display: flex; flex-direction: column; align-items: center;">
+            <h3 style="color: #0ea5e9; margin-bottom: 10px;">Test Asset Kit</h3>
+            <p style="color: #ccc; font-size: 0.9em; margin-bottom: 25px; text-align: center;">Download a randomly selected, pre-verified comic cover to test the routing gateway.</p>
+            <nav class="nav-angled" style="position: static; flex-direction: row; transform: none; gap: 0;">
+                <a href="#" onclick="downloadRandomTestImage(); return false;" style="font-size: 1.1rem; padding: 8px 18px;">📥 DOWNLOAD ASSET</a>
+            </nav>
         </div>
 
       </div>
@@ -54,13 +58,10 @@
         const randomIndex = Math.floor(Math.random() * testImages.length);
         const selectedImage = testImages[randomIndex];
         
-        // Create an invisible anchor tag to trigger the browser download
         const downloadAnchor = document.createElement('a');
         
         if (downloadAnchor !== null) {
             downloadAnchor.href = selectedImage;
-            
-            // Isolate the filename from the path
             const filenameArray = selectedImage.split('/');
             const filename = filenameArray[filenameArray.length - 1];
             downloadAnchor.download = 'OpticHash_TestAsset_' + filename;
