@@ -188,6 +188,10 @@ h1, h2, h3 {
     align-items: flex-start; 
 }
 
+/* Stagger the 1st button to pull it back in line */
+.nav-left a:nth-child(1) { margin-left: 35px; }
+.nav-right a:nth-child(1) { margin-right: 35px; }
+
 /* Stagger the 3rd button to physically inch it outwards */
 .nav-left a:nth-child(3) { margin-right: 30px; }
 .nav-right a:nth-child(3) { margin-left: 30px; }
@@ -311,7 +315,9 @@ h1, h2, h3 {
 /* ====== MOBILE OVERRIDE ====== */
 @media (max-width: 500px) {
     .home-title { font-size: 4rem; }
-    
+    /* Remove the stagger on mobile since they are horizontal */
+    .nav-left a:nth-child(1), .nav-right a:nth-child(1), 
+    .nav-left a:nth-child(3), .nav-right a:nth-child(3) { margin: 0; }
     .shader-panel, .panel-trapezoid { 
         width: 100vw; 
         height: 100vh;
