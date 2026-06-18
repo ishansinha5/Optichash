@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Zone 2: PostGIS Database (Seeded with LoCG Schema)
   spatial_db:
@@ -18,18 +16,20 @@ services:
     networks:
       - comic_net
 
-  # Zone 2: Java API Gateway (Stubbed for now)
+  # Zone 2: Java API Gateway 
   gateway_service:
     build: ./gateway-java
-    ports:
-      - "8080:8080" # <-- This goes to Java!
+    container_name: java_gateway
+    # Removed public port exposure. Only Nginx can talk to it now!
     networks:
       - comic_net
 
+  # Zone 3: Native C++ Bouncer
   phash_bouncer:
     build: ./phash-cpp
+    container_name: cpp_bouncer
     ports:
-      - "8081:8081" # <-- Put C++ back on 8081
+      - "8081:8081" 
     networks:
       - comic_net
 
@@ -39,6 +39,19 @@ services:
     container_name: ml_vision
     ports:
       - "8000:8000"
+    networks:
+      - comic_net
+
+  # Zone 1: Nginx Edge Gateway (The Public Face)
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - gateway_service
     networks:
       - comic_net
 
