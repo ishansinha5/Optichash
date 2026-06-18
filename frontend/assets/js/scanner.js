@@ -1,3 +1,13 @@
+let API_BASE_URL = "";
+
+// Check if the user is running the site locally
+if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    API_BASE_URL = "http://localhost:8080";
+} else {
+    // If not local, route traffic to the production Linux VPS
+    API_BASE_URL = "https://api.optichash.com"; 
+}
+
 async function previewAndUpload(event) {
     const file = event.target.files[0];
     
@@ -24,17 +34,11 @@ async function previewAndUpload(event) {
     formData.append("file", file);
 
     try {
-        // [DEV MODE]: Pointing to the local Java Spring Boot Gateway
-        const response = await fetch("http://localhost:8080/process", {
+        // Dynamically route the request based on the environment
+        const response = await fetch(API_BASE_URL + "/process", {
             method: "POST",
             body: formData
         });
-        
-        // [PROD MODE]: Pointing to the live cloud Edge Engine
-        // const response = await fetch("https://ishansinha05-optichash-engine.hf.space/process", {
-        //     method: "POST",
-        //     body: formData
-        // });
         
         const data = await response.json();
         console.log("Gateway Response:", data);
