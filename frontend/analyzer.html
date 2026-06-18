@@ -17,87 +17,96 @@
   </nav>
 
   <div class="shader-panel panel-trapezoid">
-    <div class="content-area">
+    <div class="content-area" style="max-width: 90%;"> <h1>LIVE MATCH ENGINE</h1>
 
-      <h1>LIVE MATCH ENGINE</h1>
-
-      <div style="text-align: center; margin-bottom: 20px;">
+      <div style="text-align: center; margin-bottom: 30px;">
         <p style="color: #ccc; font-size: 0.9em; max-width: 400px; margin: 0 auto;">
           ⚠️ <b>Scanning Tips:</b> For the highest accuracy, ensure the comic cover is well-lit, fully in frame, and not heavily blocked by fingers or glare.
         </p>
       </div>
 
-      <div style="display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; flex-wrap: wrap;">
-        
-        <details style="text-align: center; cursor: pointer; color: #888;">
-          <summary style="font-weight: bold; outline: none; color: #FFD700;">View Supported Database</summary>
-          <ul style="list-style: none; padding: 0; margin-top: 15px; color: #ccc; font-size: 0.9em; text-align: left; display: inline-block;">
-            <li style="margin-bottom: 5px;">- DC Comics' Absolute Batman Annual #1 (Cover A)</li>
-            <li style="margin-bottom: 5px;">- DC Comics' Absolute Martian Manhunter #8 (Cover A)</li>
-            <li style="margin-bottom: 5px;">- Marvel Comics' Beta Ray Bill: Argent Star (Trade Paperback - 2025 Edition Cover A)</li>
-            <li style="margin-bottom: 5px;">- DC Comics' Nightwing: A Knight In Bludhaven (Compendium Three - Cover A)</li>
-            <li style="margin-bottom: 5px;">- Image Comics' Transformers #4 (Cover E 1:50 Andrea Milana Variant)</li>
-          </ul>
-        </details>
+      <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 50px; justify-content: center; align-items: flex-start; width: 100%; max-width: 1100px; margin: 0 auto;">
+          
+          <div style="flex: 1 1 400px; display: flex; flex-direction: column; gap: 20px;">
+              
+              <div style="display: flex; flex-direction: column; gap: 15px; width: 100%; background: rgba(0,0,0,0.4); border: 2px dashed rgba(255, 255, 255, 0.3); border-radius: 12px; padding: 20px;">
+                  <details style="text-align: left; cursor: pointer; color: #888;">
+                    <summary style="font-weight: bold; outline: none; color: #FFD700;">View Supported Database</summary>
+                    <ul style="list-style: none; padding: 0; margin-top: 15px; color: #ccc; font-size: 0.9em; text-align: left;">
+                      <li style="margin-bottom: 5px;">- DC Comics' Absolute Batman Annual #1 (Cover A)</li>
+                      <li style="margin-bottom: 5px;">- DC Comics' Absolute Martian Manhunter #8 (Cover A)</li>
+                      <li style="margin-bottom: 5px;">- Marvel Comics' Beta Ray Bill: Argent Star (Trade Paperback - 2025 Edition Cover A)</li>
+                      <li style="margin-bottom: 5px;">- DC Comics' Nightwing: A Knight In Bludhaven (Compendium Three - Cover A)</li>
+                      <li style="margin-bottom: 5px;">- Image Comics' Transformers #4 (Cover E 1:50 Andrea Milana Variant)</li>
+                    </ul>
+                  </details>
 
-        <details style="text-align: center; cursor: pointer; color: #888;">
-            <summary style="font-weight: bold; outline: none; color: #FFD700;">View Scanning Examples</summary>
-            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
-                <div class="example-card" onclick="openScanModal('assets/images/good_scan_1.jpg', 'Minimal hand overlap with the cover, crisp line contrast, and uniform, indirect lighting with no high-intensity glare hotspots.')" style="cursor: zoom-in;">
-                    <img src="assets/images/good_scan_1.jpg" alt="Good Scan" style="height: 120px; width: auto; border: 2px solid #28a745; border-radius: 8px;">
-                    <p style="color: #28a745; font-size: 0.8em; margin-top: 5px; font-weight: bold;">✔️ Good</p>
+                  <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 5px 0;">
+
+                  <details style="text-align: left; cursor: pointer; color: #888;">
+                      <summary style="font-weight: bold; outline: none; color: #FFD700;">View Scanning Examples</summary>
+                      <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
+                          <div class="example-card" onclick="openScanModal('assets/images/good_scan_1.jpg', 'Minimal hand overlap with the cover, crisp line contrast, and uniform, indirect lighting with no high-intensity glare hotspots.')" style="cursor: zoom-in;">
+                              <img src="assets/images/good_scan_1.jpg" alt="Good Scan" style="height: 120px; width: auto; border: 2px solid #28a745; border-radius: 8px;">
+                              <p style="color: #28a745; font-size: 0.8em; margin-top: 5px; font-weight: bold; text-align: center;">✔️ Good</p>
+                          </div>
+                          <div class="example-card" onclick="openScanModal('assets/images/good_scan_2.jpg', 'Flat geometric orientation where the entire cover area fills the bulk of the frame, maximizing keypoint extraction.')" style="cursor: zoom-in;">
+                              <img src="assets/images/good_scan_2.jpg" alt="Good Scan" style="height: 120px; width: auto; border: 2px solid #28a745; border-radius: 8px;">
+                              <p style="color: #28a745; font-size: 0.8em; margin-top: 5px; font-weight: bold; text-align: center;">✔️ Good</p>
+                          </div>
+                          <div class="example-card" onclick="openScanModal('assets/images/bad_scan_1.jpg', 'Too many fingers blocking structural line art elements along the primary border layout.')" style="cursor: zoom-in;">
+                              <img src="assets/images/bad_scan_1.jpg" alt="Bad Scan" style="height: 120px; width: auto; border: 2px solid #dc3545; border-radius: 8px;">
+                              <p style="color: #dc3545; font-size: 0.8em; margin-top: 5px; font-weight: bold; text-align: center;">❌ Obscured</p>
+                          </div>
+                          <div class="example-card" onclick="openScanModal('assets/images/bad_scan_2.jpg', 'High-intensity environmental lighting glare reflecting directly off the gloss coat, washing out color values, and just too many things in the image itself.')" style="cursor: zoom-in;">
+                              <img src="assets/images/bad_scan_2.jpg" alt="Bad Scan" style="height: 120px; width: auto; border: 2px solid #dc3545; border-radius: 8px;">
+                              <p style="color: #dc3545; font-size: 0.8em; margin-top: 5px; font-weight: bold; text-align: center;">❌ Noisy</p>
+                          </div>
+                      </div>
+                  </details>
+              </div>
+
+              <div class="scanner-container" style="margin-top: 0; width: 100%; max-width: 100%;">
+                <div class="scanner-buttons">
+                  <label class="upload-btn mobile-camera-only">
+                    📸 OPEN CAMERA
+                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" capture="environment" style="display: none;" onchange="previewAndUpload(event)">
+                  </label>
+
+                  <label class="upload-btn">
+                    📁 UPLOAD FILE
+                    <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" style="display: none;" onchange="previewAndUpload(event)">
+                  </label>
                 </div>
-                <div class="example-card" onclick="openScanModal('assets/images/good_scan_2.jpg', 'Flat geometric orientation where the entire cover area fills the bulk of the frame, maximizing keypoint extraction.')" style="cursor: zoom-in;">
-                    <img src="assets/images/good_scan_2.jpg" alt="Good Scan" style="height: 120px; width: auto; border: 2px solid #28a745; border-radius: 8px;">
-                    <p style="color: #28a745; font-size: 0.8em; margin-top: 5px; font-weight: bold;">✔️ Good</p>
+
+                <div style="margin-top: 20px; text-align: center;">
+                  <p id="preview-placeholder" class="preview-text">Preview rendering zone</p>
+                  <img id="preview-img" style="display: none; max-width: 100%; border-radius: 8px; margin-top: 15px;" />
                 </div>
-                <div class="example-card" onclick="openScanModal('assets/images/bad_scan_1.jpg', 'Too many fingers blocking structural line art elements along the primary border layout.')" style="cursor: zoom-in;">
-                    <img src="assets/images/bad_scan_1.jpg" alt="Bad Scan" style="height: 120px; width: auto; border: 2px solid #dc3545; border-radius: 8px;">
-                    <p style="color: #dc3545; font-size: 0.8em; margin-top: 5px; font-weight: bold;">❌ Obscured</p>
-                </div>
-                <div class="example-card" onclick="openScanModal('assets/images/bad_scan_2.jpg', 'High-intensity environmental lighting glare reflecting directly off the gloss coat, washing out color values, and just too many things in the image itself.')" style="cursor: zoom-in;">
-                    <img src="assets/images/bad_scan_2.jpg" alt="Bad Scan" style="height: 120px; width: auto; border: 2px solid #dc3545; border-radius: 8px;">
-                    <p style="color: #dc3545; font-size: 0.8em; margin-top: 5px; font-weight: bold;">❌ Noisy</p>
-                </div>
-            </div>
-        </details>
+
+                <div id="scan-results" style="margin-top: 20px; font-weight: bold; font-size: 1.2em; text-align: center;"></div>
+                
+                <div id="route-indicator" style="margin-top: 10px; color: #a3e635; display: none; text-align: left;"></div>
+
+                <a id="comic-locg-link" href="#" target="_blank" style="display: none; color: #facc15; margin-top: 10px; text-decoration: underline; font-weight: bold; text-align: center;">
+                  Link to League of Comic Geeks page
+                </a>
+              </div>
+
+          </div>
+
+          <div style="flex: 1 1 400px; display: flex; flex-direction: column; justify-content: center;">
+              <p class="architectural-detail" style="margin-top: 0; text-align: left; font-size: 1.15rem;">
+                This scanner represents the front-end of a hardware-aware computer vision pipeline optimized for edge deployments. The core focus is efficient system routing and sustainable execution. 
+                <br><br>
+                When a photo is submitted, the payload is first routed to a native C++ microservice that calculates a geometric Perceptual Hash (pHash). If it finds an exact spatial match in the local cache, it returns the requested metadata instantly without invoking heavy compute.
+                <br><br>
+                If the cover is heavily obscured, distorted, or unrecognized by the cache, the system gracefully falls back to a highly quantized INT8 PyTorch engine. This neural network has been specifically trained on extreme edge cases—including harsh lighting glare, deep shadows, steep viewing angles, and real-world background messes—ensuring high-accuracy recognition in everyday environments.
+              </p>
+          </div>
 
       </div>
 
-      <div class="scanner-container">
-        <div class="scanner-buttons">
-          <label class="upload-btn mobile-camera-only">
-            📸 OPEN CAMERA
-            <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" capture="environment" style="display: none;" onchange="previewAndUpload(event)">
-          </label>
-
-          <label class="upload-btn">
-            📁 UPLOAD FILE
-            <input type="file" accept="image/*,.heic,.heif,image/heic,image/heif" style="display: none;" onchange="previewAndUpload(event)">
-          </label>
-        </div>
-
-        <div style="margin-top: 20px;">
-          <p id="preview-placeholder" class="preview-text">Preview rendering zone</p>
-          <img id="preview-img" style="display: none; max-width: 100%; border-radius: 8px; margin-top: 15px;" />
-        </div>
-
-        <div id="scan-results" style="margin-top: 20px; font-weight: bold; font-size: 1.2em;"></div>
-        
-        <div id="route-indicator" style="margin-top: 10px; color: #a3e635; display: none;"></div>
-
-        <a id="comic-locg-link" href="#" target="_blank" style="display: none; color: #facc15; margin-top: 10px; text-decoration: underline; font-weight: bold;">
-          Link to League of Comic Geeks page
-        </a>
-      </div>
-
-      <p class="architectural-detail" style="margin-top: 2rem; text-align: left;">
-        This scanner represents the front-end of a hardware-aware computer vision pipeline optimized for edge deployments. The core focus is efficient system routing and sustainable execution. 
-        <br><br>
-        When a photo is submitted, the payload is first routed to a native C++ microservice that calculates a geometric Perceptual Hash (pHash). If it finds an exact spatial match in the local cache, it returns the requested metadata instantly without invoking heavy compute.
-        <br><br>
-        If the cover is heavily obscured, distorted, or unrecognized by the cache, the system gracefully falls back to a highly quantized INT8 PyTorch engine. This neural network has been specifically trained on extreme edge cases—including harsh lighting glare, deep shadows, steep viewing angles, and real-world background messes—ensuring high-accuracy recognition in everyday environments.
-      </p>
     </div>
   </div>
 

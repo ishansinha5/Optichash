@@ -42,6 +42,7 @@ h1, h2, h3 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-top: 15vh;
     color: white;
     position: relative;
     z-index: 1;
@@ -177,7 +178,7 @@ h1, h2, h3 {
 .nav-left {
     left: auto !important;
     /* Anchor inner edge flush with the panel-left's right edge (65vw) + small gap */
-    right: calc(35vw - 10px);
+    right: calc(35vw + 40px);
     transform-origin: right center;
     transform: rotate(14deg);
     align-items: flex-end;
@@ -186,7 +187,7 @@ h1, h2, h3 {
 .nav-right {
     right: auto !important;
     /* Anchor inner edge flush with the panel-right's left edge (35vw) + small gap */
-    left: calc(35vw - 10px);
+    left: calc(35vw + 40px);
     transform-origin: left center;
     transform: rotate(-14deg);
     align-items: flex-start;
