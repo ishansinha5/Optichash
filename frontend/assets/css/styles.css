@@ -189,8 +189,8 @@ h1, h2, h3 {
 }
 
 /* Stagger the 1st button to pull it back in line */
-.nav-left a:nth-child(1) { margin-left: 35px; }
-.nav-right a:nth-child(1) { margin-right: 35px; }
+.nav-left a:nth-child(1) { margin-left: 45px; }
+.nav-right a:nth-child(1) { margin-right: 45px; }
 
 /* Stagger the 3rd button to physically inch it outwards */
 .nav-left a:nth-child(3) { margin-right: 30px; }
@@ -301,13 +301,13 @@ h1, h2, h3 {
 /* The inner content */
 .panel-trapezoid .content-area {
     width: 100%;
-    max-width: 75%; /* Slightly narrower so it breathes inside the trapezoid walls */
+    max-width: 75%; 
     height: auto; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin-top: 5vh; /* Tiny nudge down so it avoids the top navigation */
+    justify-content: flex-start; /* Removed center constraint so it flows naturally */
+    margin-top: 15vh; /* This dictates exactly how far down the page the title starts */
     padding: 0;
     text-align: center;
 }
@@ -315,9 +315,8 @@ h1, h2, h3 {
 /* ====== MOBILE OVERRIDE ====== */
 @media (max-width: 500px) {
     .home-title { font-size: 4rem; }
-    /* Remove the stagger on mobile since they are horizontal */
-    .nav-left a:nth-child(1), .nav-right a:nth-child(1), 
-    .nav-left a:nth-child(3), .nav-right a:nth-child(3) { margin: 0; }
+    .nav-left a:nth-child(1), .nav-right a:nth-child(1),
+    .nav-left a:nth-child(3), .nav-right a:nth-child(3) { position: static !important; }
     .shader-panel, .panel-trapezoid { 
         width: 100vw; 
         height: 100vh;
