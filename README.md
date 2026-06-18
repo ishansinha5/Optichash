@@ -14,6 +14,7 @@
 > [!NOTE]
 > ### 1. Master System Flow Architecture
 > ```mermaid
+> %%{init: {'themeVariables': {'edgeLabelBackground':'transparent'}}}%%
 > graph TD
 >     classDef default fill:#0ea5e9,stroke:#ffffff,stroke-width:2px,color:#ffffff,font-weight:bold;
 >
@@ -29,7 +30,7 @@
 >     Diamond -->|"Execution Path A"| DB
 >     Diamond -->|"Execution Path B"| Python
 >
->     linkStyle 0,1,2,3,4 stroke:#22c55e,stroke-width:3px;
+>     linkStyle 0,1,2,3,4 stroke:#22c55e,stroke-width:3px,color:#ffffff;
 > ```
 > *Figure 1: High-level request routing through the API Gateway, intercepted by the C++ Gatekeeper before conditionally falling back to Python.*
 
@@ -37,6 +38,7 @@
 
 > ### 2. Execution Path A: Zero-Compute Cache Hit
 > ```mermaid
+> %%{init: {'themeVariables': {'edgeLabelBackground':'transparent'}}}%%
 > graph TD
 >     classDef default fill:#0ea5e9,stroke:#ffffff,stroke-width:2px,color:#ffffff,font-weight:bold;
 >
@@ -52,7 +54,7 @@
 >     CPP -->|"5. CACHED_HIT_CPP (58.6M FLOPs Saved)"| Java
 >     Java -->|"6. JSON Response"| Client
 >
->     linkStyle 0,1,2,3,4,5 stroke:#22c55e,stroke-width:3px;
+>     linkStyle 0,1,2,3,4,5 stroke:#22c55e,stroke-width:3px,color:#ffffff;
 > ```
 > *Figure 2: The optimized route. A known image payload bypasses the neural network entirely, serving metadata directly from the persistent database.*
 
@@ -60,6 +62,7 @@
 
 > ### 3. Execution Path B: Inference & Dynamic Write-Back
 > ```mermaid
+> %%{init: {'themeVariables': {'edgeLabelBackground':'transparent'}}}%%
 > graph TD
 >     classDef default fill:#0ea5e9,stroke:#ffffff,stroke-width:2px,color:#ffffff,font-weight:bold;
 >
@@ -72,19 +75,15 @@
 >     Client -->|"1. Request Image Match"| Java
 >     Java -->|"2. Query Local Hash"| CPP
 >     CPP -->|"3. SQL SELECT"| DB
->     
->     %% Reversed routing to push the arrow left, away from Python
->     CPP <.-.|"4. No Match Found"| DB
->     
+>     DB -.->|"4. No Match Found"| CPP
 >     CPP -->|"5. CACHE_MISS"| Java
 >     Java -->|"6. Deep Learning Inference Route"| Python
 >     Python -->|"7. Returns Match + 58.6M FLOPs"| Java
 >     Java -->|"8. JSON Response"| Client
 >     Java == "9. Telemetry Write-Back (UPSERT)" ==> DB
 >
->     %% Style the links green and color the text to match the nodes
->     linkStyle 0,1,2,3,4,5,6,7 stroke:#22c55e,stroke-width:3px,color:#0ea5e9;
->     linkStyle 8 stroke:#22c55e,stroke-width:5px,color:#0ea5e9;
+>     linkStyle 0,1,2,3,4,5,6,7 stroke:#22c55e,stroke-width:3px,color:#ffffff;
+>     linkStyle 8 stroke:#22c55e,stroke-width:5px,color:#ffffff;
 > ```
 > *Figure 3: The fallback route. A novel image is routed to the INT8-quantized edge neural engine. The Java Gateway subsequently executes a dynamic write-back loop to ensure all future identical scans route to Execution Path A.*
 ---
