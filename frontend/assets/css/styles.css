@@ -264,14 +264,6 @@ h1, h2, h3 {
     margin: 0;
 }
 
-/* ====== NEW RESOURCES PAGE COMPONENTS ====== */
-
-/* ====== NEW RESOURCES PAGE COMPONENTS ====== */
-
-/* Center Navigation for Resources Page (Horizontal Row) */
-/* ====== NEW RESOURCES PAGE COMPONENTS ====== */
-
-/* Center Navigation for Resources Page (Horizontal Row) */
 .nav-center {
     flex-direction: row !important;
     transform: none !important;
@@ -280,36 +272,39 @@ h1, h2, h3 {
     right: 0 !important;
     justify-content: center;
     width: 100%;
+    z-index: 20; /* Ensures nav stays visible above the fullscreen trapezoid */
 }
 
 /* Center Trapezoid Shader Panel */
 .panel-trapezoid {
     position: fixed;
+    top: 0 !important; /* Anchors to the absolute top of the screen */
     bottom: 0;
-    top: auto !important; /* Safely override .shader-panel */
     left: 0; 
     transform: none; 
     width: 100vw; 
-    height: 85vh; 
+    height: 100vh; /* Stretches the full height of the monitor */
     background: rgba(10, 10, 10, 0.93);
     clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
-    /* THE FIX: Lock the shape to the viewport so it never scrolls away */
-    overflow: hidden !important; 
-    z-index: 10;
     display: flex;
-    justify-content: center;
-    padding: 0 !important; /* Move padding to inner content */
+    align-items: center; /* Perfect vertical centering */
+    justify-content: center; /* Perfect horizontal centering */
+    padding: 0 !important; /* Strip out all padding */
+    z-index: 10;
+    overflow: hidden; /* Lock the background from scrolling */
 }
 
-/* The inner content handles the scrolling so the shadow stays locked */
+/* The inner content */
 .panel-trapezoid .content-area {
     width: 100%;
-    max-width: 80%;
-    height: 100%; 
-    overflow-y: auto; /* Enable scroll just for the text/buttons */
-    padding-top: 10vh; 
-    padding-bottom: 15vh; /* Lots of space so buttons don't hit the bottom */
-    margin-top: 0;
+    max-width: 75%; /* Slightly narrower so it breathes inside the trapezoid walls */
+    height: auto; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5vh; /* Tiny nudge down so it avoids the top navigation */
+    padding: 0;
     text-align: center;
 }
 
@@ -322,7 +317,8 @@ h1, h2, h3 {
         height: 100vh;
         clip-path: none; 
         padding: 120px 20px 40px 20px !important; 
-        overflow-y: auto !important; /* Restore scrolling to the panel on mobile */
+        overflow-y: auto !important; 
+        display: block !important; /* Turns off centering on mobile so it can scroll normally */
     }
     
     .nav-angled { 
@@ -349,7 +345,8 @@ h1, h2, h3 {
         margin: 0; 
         max-width: 100%;
         height: auto;
-        overflow-y: visible; /* Let the parent handle scrolling */
+        display: block; /* Reverts flex layout for mobile */
+        overflow-y: visible; 
     }
     .content-area h1 { font-size: 2.5rem; }
     .architectural-detail { text-align: left; font-size: 1rem; }
