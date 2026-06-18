@@ -15,25 +15,20 @@
 > ### 1. Master System Flow Architecture
 > ```mermaid
 > graph TD
->     %% Custom Node Styling
 >     classDef default fill:#0ea5e9,stroke:#ffffff,stroke-width:2px,color:#ffffff,font-weight:bold;
->     
->     %% Nodes
+>
 >     Client(["Vercel Edge Client<br>(Vanilla JS)"])
 >     Java(["Java SpringBoot API Gateway<br>(Port 8080)"])
 >     CPP(["C++ pHash Bouncer<br>(Port 8081)"])
 >     DB[("PostgreSQL / PostGIS")]
 >     Python[("Python FastAPI Worker<br>(Port 7860)")]
->     
->     %% Flow
+>
 >     Client <--> Java
 >     Java --> CPP
 >     CPP -->|"Compute pHash"| Diamond{Is it in the Database?}
->     
 >     Diamond -->|"Execution Path A"| DB
 >     Diamond -->|"Execution Path B"| Python
-> 
->     %% Make all links green
+>
 >     linkStyle default stroke:#22c55e,stroke-width:3px;
 > ```
 > *Figure 1: High-level request routing through the API Gateway, intercepted by the C++ Gatekeeper before conditionally falling back to Python.*
@@ -43,24 +38,20 @@
 > ### 2. Execution Path A: Zero-Compute Cache Hit
 > ```mermaid
 > graph TD
->     %% Custom Node Styling
 >     classDef default fill:#0ea5e9,stroke:#ffffff,stroke-width:2px,color:#ffffff,font-weight:bold;
->     
->     %% Nodes
->     Client(["Vercel Edge Client (Vanilla JS)"])
->     Java(["Java SpringBoot API Gateway (Port 8080)"])
->     CPP(["C++ pHash Bouncer (Port 8081)"])
+>
+>     Client["Vercel Edge Client<br>(Vanilla JS)"]
+>     Java["Java SpringBoot API Gateway<br>(Port 8080)"]
+>     CPP["C++ pHash Bouncer<br>(Port 8081)"]
 >     DB[("PostgreSQL / PostGIS")]
->     
->     %% Flow
+>
 >     Client -->|"1. Request Image Match"| Java
 >     Java -->|"2. Query Local Hash"| CPP
 >     CPP -->|"3. SQL SELECT"| DB
 >     DB -->|"4. Match Found!"| CPP
 >     CPP -->|"5. CACHED_HIT_CPP (58.6M FLOPs Saved)"| Java
 >     Java -->|"6. JSON Response"| Client
-> 
->     %% Make all links green
+>
 >     linkStyle default stroke:#22c55e,stroke-width:3px;
 > ```
 > *Figure 2: The optimized route. A known image payload bypasses the neural network entirely, serving metadata directly from the persistent database.*
@@ -70,36 +61,25 @@
 > ### 3. Execution Path B: Inference & Dynamic Write-Back
 > ```mermaid
 > graph TD
->     %% Custom Node Styling
 >     classDef default fill:#0ea5e9,stroke:#ffffff,stroke-width:2px,color:#ffffff,font-weight:bold;
->     classDef writeback fill:#0ea5e9,stroke:#22c55e,stroke-width:4px,color:#ffffff,font-weight:bold;
-> 
->     %% Top Center
->     Client(["Vercel Edge Client (Vanilla JS)"])
-> 
->     %% Middle Center
->     Java(["Java SpringBoot API Gateway (Port 8080)"])
-> 
->     %% Bottom Left branch
->     CPP(["C++ pHash Bouncer (Port 8081)"])
+>
+>     Client["Vercel Edge Client<br>(Vanilla JS)"]
+>     Java["Java SpringBoot API Gateway<br>(Port 8080)"]
+>     CPP["C++ pHash Bouncer<br>(Port 8081)"]
 >     DB[("PostgreSQL / PostGIS")]
-> 
->     %% Bottom Right branch
->     Python[("Python FastAPI Worker (Port 7860)")]
-> 
->     %% Layout: force U-shape with subgraphs
->     subgraph LEFT ["  "]
+>     Python[("Python FastAPI Worker<br>(Port 7860)")]
+>
+>     subgraph LEFT[" "]
 >         direction TB
 >         CPP --> DB
 >         DB -.->|"4. No Match Found"| CPP
 >     end
-> 
->     subgraph RIGHT ["  "]
+>
+>     subgraph RIGHT[" "]
 >         direction TB
 >         Python
 >     end
-> 
->     %% Main flow
+>
 >     Client -->|"1. Request Image Match"| Java
 >     Java -->|"2. Query Local Hash"| CPP
 >     CPP -->|"5. CACHE_MISS"| Java
@@ -107,8 +87,7 @@
 >     Python -->|"7. Returns Match + 58.6M FLOPs"| Java
 >     Java -->|"8. JSON Response"| Client
 >     Java == "9. Telemetry Write-Back (UPSERT)" ==> DB
-> 
->     %% Label the internal LEFT arrows
+>
 >     linkStyle 0 stroke:#22c55e,stroke-width:3px;
 >     linkStyle 1 stroke:#22c55e,stroke-width:3px;
 >     linkStyle 2 stroke:#22c55e,stroke-width:3px;
