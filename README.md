@@ -78,7 +78,7 @@
 >     
 >     %% Standard upward dotted arrow. 
 >     %% The Python rank modifiers below keep this path clear!
->     DB -.->|"<br>4. No Match<br>Found"| CPP
+>     DB -.->|"4. No Match<br>Found"| CPP
 >     
 >     CPP -->|"5. CACHE_MISS"| Java
 >     
