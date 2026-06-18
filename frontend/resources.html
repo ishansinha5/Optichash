@@ -18,11 +18,11 @@
 
   <div class="shader-panel panel-trapezoid">
     <div class="content-area">
-      <h1 style="text-align: center; margin-top: 20px;">SYSTEM RESOURCES</h1>
+      <h1 style="text-align: center;">SYSTEM RESOURCES</h1>
       
-      <p class="architectural-detail" style="margin-top: 2rem; text-align: center;">
+      <p class="architectural-detail" style="margin-top: 1.5rem; text-align: center;">
         <strong>Evaluating the Pipeline</strong><br>
-        To properly test the telemetry and optimization routing of the OpticHash system, you need clean baseline data. This resource kit provides direct access to our system demonstration and guaranteed-hit testing assets so you can verify the exact compute footprint reduction (FLOPs saved) during a spatial cache hit. By testing with these verified assets, you can observe the transition from a heavy Python inference task (Cache Miss) to a highly efficient, zero-compute C++ bypass (Cache Hit) in real-time. This predictable testing environment is crucial for validating the "Green AI" telemetry loops and confirming that the native C++ gateway correctly intercepts spatial matches before the hardware attempts to initialize the PyTorch tensors.
+        This resource kit provides clean baseline data for testing OpticHash's optimization routing. Use the verified assets below to observe the system transition from a heavy Python inference task (Cache Miss) to a zero-compute C++ bypass (Cache Hit) in real-time—confirming that the native C++ gateway correctly intercepts spatial matches before PyTorch tensors are ever initialized.
       </p>
 
       <div style="display: flex; justify-content: center; gap: 20px; margin-top: 3rem; flex-wrap: wrap;">
