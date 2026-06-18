@@ -176,25 +176,25 @@ h1, h2, h3 {
 
 .nav-left {
     left: auto !important; 
-    right: 34vw; 
+    right: 38vw; 
     transform: rotate(-14deg); 
-    align-items: flex-end; 
+    align-items: center; 
 }
 
 .nav-right {
     right: auto !important; 
-    left: 34vw; 
+    left: 38vw; 
     transform: rotate(14deg); 
-    align-items: flex-start; 
+    align-items: center; 
 }
 
 /* Stagger the 1st button to pull it back in line */
-.nav-left a:nth-child(1) { margin-left: 140px; }
-.nav-right a:nth-child(1) { margin-right: 140px; }
+.nav-left a:nth-child(1) { margin-left: 60px; }
+.nav-right a:nth-child(1) { margin-right: 60px; }
 
 /* Stagger the 3rd button to physically inch it outwards */
-.nav-left a:nth-child(3) { margin-right: 30px; }
-.nav-right a:nth-child(3) { margin-left: 30px; }
+.nav-left a:nth-child(3) { margin-right: 60px; }
+.nav-right a:nth-child(3) { margin-left: 60px; }
 
 /* ====== INNER CONTENT STYLING ====== */
 .content-area h1 {
@@ -295,7 +295,7 @@ h1, h2, h3 {
     justify-content: center; /* Perfect horizontal centering */
     padding: 0 !important; /* Strip out all padding */
     z-index: 10;
-    overflow-y: auto; /* Allow scrolling so cards are reachable */
+    overflow: hidden;
 }
 
 /* The inner content */
@@ -307,7 +307,7 @@ h1, h2, h3 {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    margin-top: 12vh; /* Clears the nav bar at top */
+    margin-top: 16vh; /* Clears the nav bar at top */
     padding-bottom: 6vh;
     text-align: center;
 }
