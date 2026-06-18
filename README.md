@@ -69,7 +69,7 @@
 >     Client("Vercel Edge Client<br>(Vanilla JS)")
 >     Java("Java SpringBoot API Gateway<br>(Port 8080)")
 >     CPP("C++ pHash Bouncer<br>(Port 8081)")
->     DB[("PostgreSQL / PostGIS")]
+>     DB[("PostgreSQL / PostGIS<br>(Port 5432)")]
 >     Python[("Python FastAPI Worker<br>(Port 7860)")]
 >
 >     Client -->|"1. Request Image Match"| Java
