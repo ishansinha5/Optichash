@@ -5,7 +5,7 @@
 
 > [!IMPORTANT]
 > ### System Operation Demonstration
-> [![OpticHash End-to-End Demonstration](https://img.youtube.com/vi/i8L5bwY-MSA/maxresdefault.jpg)](https://youtu.be/i8L5bwY-MSA)
+> [![OpticHash End-to-End Demonstration](frontend/assets/images/youtube_cover.jpg)](https://youtu.be/i8L5bwY-MSA)
 > *Click the image above to watch the full end-to-end operation running locally under a multi-container Docker Compose environment.*
 
 ---
