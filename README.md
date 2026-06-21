@@ -130,7 +130,7 @@ The true power of this project lies in how the underlying software architecture 
 
 ---
 
-## The Reality of Cloud Deployment & The Live Demo Compromise
+## The Unfortunate Reality of Cloud Deployment & The Live Demo Compromise
 
 Hosting a multi-container pipeline containing an enterprise Spring Boot gateway, a PostGIS database, and a PyTorch tensor engine requires substantial hardware. 
 
@@ -159,7 +159,7 @@ The live site perfectly demonstrates the *logic* of the system, while the pristi
 This stack is designed to be fully reproducible across environments, running flawlessly on a native Linux VPS or a local machine.
 
 1. **Clone the Repository:**
-   - git clone [https://github.com/ishansinha5/OpticHash.git]     (https://github.com/ishansinha5/OpticHash.git)
+   - git clone (https://github.com/ishansinha5/OpticHash.git)
    - cd OpticHash
 
 2. **Sync the Production Weights**: 
