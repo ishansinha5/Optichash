@@ -1,34 +1,32 @@
 # Frontend Client: Edge Deployment & Telemetry
 
-This directory contains the lightweight, zero-bloat presentation layer of the OpticHash pipeline. It handles user inputs, image preprocessing, and direct asynchronous communication with the Java Spring Boot backend. 
+This directory contains the lightweight, zero-bloat presentation layer of the OpticHash pipeline. It handles user inputs, image pre-processing, and visualizes the complex routing logic of the backend architecture. 
 
 ## Core Web Application (HTML & JS)
 
-The UI is built using strict, vanilla HTML to ensure maximum compatibility and near-instant load times across mobile devices.
-* **`analyzer.html`:** The primary interface for the computer vision pipeline. It houses the file-upload and native mobile camera hooks. To ensure our dynamic telemetry updates are never blocked by aggressive browser caching, the linked JavaScript asset utilizes a cache-busting query string (e.g., `?v=2`).
-* **`scanner.js`:** The bridge between the user's physical camera and the orchestrator engine. It executes a highly specific sequence of events:
+The UI is built using strict, vanilla HTML and CSS to ensure maximum compatibility and near-instant load times across mobile and desktop devices without the overhead of heavy JavaScript frameworks.
 
-1. **Payload Packaging:** The binary image is encapsulated inside a standard `FormData()` object.
-2. **Asynchronous Communication:** The script fires an `await fetch` POST request to the live Java endpoint (`http://localhost:8080/process`). 
-3. **Logic Branching & DOM Injection:** Once the JSON response is caught, the script evaluates the routing status:
-   * *Success (Cache Hit):* If the backend returns `compute_cycles_saved > 0`, the JavaScript conditionally generates a Green AI Telemetry block. It formats the raw integer (e.g., 58631680) into a readable "58.6 Million FLOPs" string and dynamically injects an HTML sub-text explaining how the C++ cache bypassed the PyTorch engine to conserve electricity.
-   * *Success (Cache Miss):* The UI renders a successful title match but indicates that 0 FLOPs were saved since the Python model had to execute the math.
-   * *Error Handling:* If the backend triggers a low-confidence threshold rejection or flags the image as "generic background noise" (Junk Class), the script overrides the UI with a specific visual flag (e.g., Detective Chimp or a Confused Spider-Man) and displays a user-friendly scanning correction prompt.
+* **`analyzer.html`:** The primary interface for the computer vision pipeline. It houses the file-upload inputs, the interactive hardware metrics dashboards, and the dynamic terminal logs. 
+* **`scanner.js`:** Originally built to fire asynchronous `POST` payloads to the live Java endpoint, this file has been heavily refactored for our Vercel deployment into a **Stateful Architectural Simulator**. To strictly enforce the project's Green AI mandate and eliminate idle cloud compute costs, the live multi-container backend is currently hibernating. Instead, this script mimics the exact logic of the edge node:
+    1. **Payload Analysis:** When an image is uploaded, it evaluates the asset or runs a localized Canvas Pixel Analysis (to bypass aggressive mobile OS filename stripping).
+    2. **Stateful Routing:** It maintains a local `Set()` cache during the user's session. First-time uploads simulate a "Cache Miss" and a 2.5-second PyTorch cold-start latency. 
+    3. **DOM Injection & Telemetry:** On subsequent uploads, the system registers a "Cache Hit," dropping the latency down to 45ms. It dynamically injects Green AI telemetry, updating the UI progress bars to demonstrate exactly how the C++ cache bypasses the PyTorch engine to conserve edge memory and electricity. 
+    4. **Safety & Fallbacks:** If a live mobile camera photo or an unsupported asset is submitted, the script cleanly intercepts it, throws a realistic "Hibernation Timeout" terminal error, and gracefully directs the user to the verified resource kit.
 
 ## Styling & Assets
 
-* **`assets/images/`:** Stores the local images for the frontend UI, including our background wallpapers and the visual scanning examples utilized in the modal overlay.
+* **`assets/images/`:** Stores the local images for the frontend UI, including our background wallpapers, the localized comic covers for the simulation, and the visual scanning examples utilized in the modal overlay.
 * **`styles.css`:** Built with sliding shader panels and heavy drop shadows to give the interface a stylized, physical depth while maintaining a strong graphic-novel aesthetic.
 
 ---
 
 ## The Legacy Architecture (Vercel Serverless Monolith)
 
-As a learning progression, this project originally started as a monolithic web application for a local comic shop locator. All of the original code for this phase is preserved in the `legacy/` directory.
+As a learning progression, this project originally started as a monolithic web application for a local comic shop locator. All of the original code for this phase is preserved in the `legacy/` directory. Building this was an incredible learning experience in handling asynchronous API chains.
 
 ### Legacy Front-End
 * `comicfinder.js` hooked directly into the browser's `navigator.geolocation` API. 
-* To navigate store results, I integrated `Hammer.js` to enable mobile-native swipe gestures, serializing swiped store data into a JSON string and pushing it directly into the browser's `localStorage`.
+* To navigate store results, I integrated `Hammer.js` to enable mobile-native swipe gestures, serializing swiped store data into a JSON string and pushing it directly into the browser's `localStorage` for persistence.
 
 ### Legacy Backend
 The frontend sent coordinate data to Vercel Serverless Functions acting as a proxy to protect Google Cloud API keys.
