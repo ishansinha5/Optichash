@@ -147,7 +147,11 @@ I chose not to do that, because doing so completely betrays the soul of the proj
 **The Solution:**
 To preserve the integrity of the code, the live multi-container backend is currently **hibernating**. The live portfolio site deployed on Vercel utilizes an advanced Javascript state machine to simulate the exact routing logic, cache hits, and telemetry visualization. We even built a localized HTML5 Canvas fallback to combat aggressive iOS/Android filename stripping, allowing the frontend to act as a lightweight edge-inferencer. 
 
-The live site perfectly demonstrates the *logic* of the system, while the pristine, uncompromised backend architecture remains fully documented and available for review here on GitHub.
+The live site perfectly demonstrates the *logic* of the system, while the pristine, uncompromised backend architecture remains fully documented and available for review here on GitHub. To explore the true engineering and atomic system logic behind this architecture, please review the core microservices:
+
+* **[`gateway-java/`](gateway-java/README.md):** The Spring Boot API orchestrator. This handles synchronous multi-part file routing, payload rebuilding, and the dynamic telemetry write-back loop.
+* **[`phash-cpp/`](phash-cpp/README.md):** The native C++ gatekeeper. This executes the raw OpenCV Discrete Cosine Transform (DCT) math and manages the ultra-fast local memory-map cache.
+* **[`ml-python/`](ml-python/README.md):** The Edge Neural Brain. This houses the heavily quantized INT8 PyTorch vision model, featuring automated `fvcore` FLOP profiling and strict confidence thresholding.
 ---
 
 ## Local Development & Orchestration
