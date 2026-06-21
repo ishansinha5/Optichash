@@ -9,7 +9,7 @@ function getComicDataFromFilename(filename) {
         url: "https://leagueofcomicgeeks.com/comic/6092062/absolute-batman-2025-annual-1" 
     };
     if(filename.includes('betaraybill')) return { 
-        title: "Beta Ray Bill: Argent Star (Trade Paperback - 2025 Edition)", 
+        title: "Beta Ray Bill: Argent Star", 
         url: "https://leagueofcomicgeeks.com/comic/8509698/beta-ray-bill-argent-star-tp?variant=8271107" 
     };
     if(filename.includes('martianmanhunter')) return { 
@@ -17,69 +17,14 @@ function getComicDataFromFilename(filename) {
         url: "https://leagueofcomicgeeks.com/comic/1616741/absolute-martian-manhunter-8" 
     };
     if(filename.includes('nightwing')) return { 
-        title: "Nightwing: A Knight in Blüdhaven (Compendium 3)", 
+        title: "Nightwing: A Knight in Blüdhaven", 
         url: "https://leagueofcomicgeeks.com/comic/3717786/nightwing-a-knight-in-bluedhaven-compendium-book-3-tp" 
     };
     if(filename.includes('tf4')) return { 
-        title: "Transformers #4 (Cover E: Milana Variant)", 
+        title: "Transformers #4 (Milana Variant)", 
         url: "https://leagueofcomicgeeks.com/comic/4294159/transformers-4?variant=9647505" 
     };
-    return { title: "Comic Identified", url: "https://leagueofcomicgeeks.com" };
-}
-
-// Canvas-Based Relative Hue & Aspect Clustering
-function analyzeImageSignature(img) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 64; canvas.height = 64;
-    ctx.drawImage(img, 0, 0, 64, 64);
-    const data = ctx.getImageData(0, 0, 64, 64).data;
-
-    let totalR = 0, totalG = 0, totalB = 0;
-    for (let i = 0; i < data.length; i += 4) {
-        totalR += data[i]; 
-        totalG += data[i+1]; 
-        totalB += data[i+2];
-    }
-    const avgR = totalR / 4096; 
-    const avgG = totalG / 4096; 
-    const avgB = totalB / 4096;
-
-    const aspect = img.naturalWidth / img.naturalHeight;
-
-    // 1. Extreme Perspective Skew (Beta Ray Bill Angled)
-    if (aspect > 1.1) {
-        return 'resources_betaraybill_failure_angled.jpg';
-    }
-
-    // 2. Low-Light Fallback (Beta Ray Bill Blurry)
-    // This is the only cover that is overwhelmingly dark/black
-    if (avgR < 85 && avgG < 85 && avgB < 85) {
-        return 'resources_betaraybill_success_blurry.jpg';
-    }
-
-    // 3. Batman (Red/Orange Dominant)
-    // The fire makes Red significantly higher than Green or Blue
-    if (avgR > avgG + 15 && avgR > avgB + 25) {
-        // Digital scans are ~0.65 aspect. Phone photos are ~0.75 or ~0.56
-        return aspect < 0.69 ? 'resources_batman_failure_hdscan.jpg' : 'resources_batman_success_thumbs.jpg';
-    }
-
-    // 4. Nightwing (Green/Blue Dominant)
-    // The neon green sky and blue suit push these values above red
-    if (avgG > avgR && avgB > avgR - 10) {
-        return 'resources_nightwing_success.jpg';
-    }
-
-    // 5. Transformers (Cool/Icy White)
-    // White and light blue make Blue the dominant channel
-    if (avgB > avgR && avgB > avgG - 10) {
-        return 'resources_tf4_milana_success.jpg';
-    }
-
-    // 6. Martian Manhunter (Colorful - High R & G balance)
-    // Yellow is a mix of Red and Green, so neither strictly dominates
-    return aspect < 0.69 ? 'resources_martianmanhunter_success_zoomed.jpg' : 'resources_martianmanhunter_failure_noisy.jpg';
+    return { title: "Unverified Asset", url: "#" };
 }
 
 function previewAndUpload(event) {
@@ -98,9 +43,7 @@ function previewAndUpload(event) {
     previewImg.style.display = 'inline-block';
     placeholder.style.display = 'none';
     resultsDiv.innerHTML = '';
-    
     locgLink.style.display = 'none';
-    locgLink.href = '#';
     
     terminal.style.display = 'block';
     terminal.innerHTML = '';
@@ -111,27 +54,20 @@ function previewAndUpload(event) {
     logToTerminal(`[SYSTEM] Received payload: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
     logToTerminal(`[C++ GATEKEEPER] Initializing geometric spatial filter...`);
 
-    // 2. Wait for image to load to analyze pixels
-    previewImg.onload = function() {
-        let routeKey = file.name.toLowerCase();
-        
-        // If mobile OS wiped the descriptive filename, analyze the pixels
-        if (!routeKey.includes('batman') && !routeKey.includes('nightwing') && !routeKey.includes('betaraybill') && !routeKey.includes('martianmanhunter') && !routeKey.includes('tf4')) {
-            routeKey = analyzeImageSignature(previewImg);
-            logToTerminal(`[INFO] OS filename stripping detected. Routing via Canvas Pixel Analysis...`);
-        }
-
-        // 3. Stateful Routing Logic
-        if (routeKey.includes('success')) {
-            if (sessionCache.has(routeKey)) {
-                simulateCacheHit(routeKey);
-            } else {
-                simulateInitialInference(routeKey);
-            }
-        } else {
-            simulateCacheMiss(routeKey);
-        }
-    };
+    const routeKey = file.name.toLowerCase();
+    
+    // 2. Stateful Routing Logic
+    if (routeKey.includes('success')) {
+        if (sessionCache.has(routeKey)) simulateCacheHit(routeKey);
+        else simulateInitialInference(routeKey);
+    } 
+    else if (routeKey.includes('failure')) {
+        simulateCacheMiss(routeKey);
+    } 
+    else {
+        // Catches live mobile camera photos (image.jpg) or unverified desktop files
+        simulateLiveScan();
+    }
 }
 
 function logToTerminal(message) {
@@ -156,7 +92,6 @@ function simulateCacheHit(routeKey) {
         document.getElementById('metric-vram').style.background = '#0ea5e9';
         document.getElementById('metric-vram-text').innerText = '14 MB / 4096 MB';
 
-        // Green Glow
         const terminal = document.getElementById('system-terminal');
         terminal.style.border = '1px solid #a3e635';
         terminal.style.boxShadow = 'inset 0 0 15px rgba(163, 230, 53, 0.4)';
@@ -196,7 +131,6 @@ function simulateInitialInference(routeKey) {
         logToTerminal(`[FASTAPI] Inference complete. Confidence: 96.4%`);
         logToTerminal(`<span style="color: #0ea5e9;">[SYSTEM] Adding geometry to local cache...</span>`);
         
-        // Green Glow
         const terminal = document.getElementById('system-terminal');
         terminal.style.border = '1px solid #a3e635';
         terminal.style.boxShadow = 'inset 0 0 15px rgba(163, 230, 53, 0.4)';
@@ -217,7 +151,7 @@ function simulateInitialInference(routeKey) {
     }, 2800);
 }
 
-// Route 3: Cache Miss (Edge Case Failures)
+// Route 3: Known Edge Case Failures
 function simulateCacheMiss(routeKey) {
     setTimeout(() => {
         logToTerminal(`[C++ GATEKEEPER] Generated pHash: ${Math.random().toString(16).substr(2, 16)}`);
@@ -234,7 +168,6 @@ function simulateCacheMiss(routeKey) {
     }, 800);
 
     setTimeout(() => {
-        // Red Glow
         const terminal = document.getElementById('system-terminal');
         terminal.style.border = '1px solid #dc3545';
         terminal.style.boxShadow = 'inset 0 0 15px rgba(220, 53, 69, 0.4)';
@@ -270,6 +203,39 @@ function simulateCacheMiss(routeKey) {
     }, 2200);
 }
 
+// Route 4: Live Camera Snaps / Unknown Assets
+function simulateLiveScan() {
+    setTimeout(() => {
+        logToTerminal(`[C++ GATEKEEPER] Generated pHash: ${Math.random().toString(16).substr(2, 16)}`);
+        logToTerminal(`[SPRING GATEWAY] Querying PostGIS Spatial Index...`);
+        logToTerminal(`<span style="color: #facc15;">[SPRING GATEWAY] CACHE MISS. Unverified Asset.</span>`);
+        logToTerminal(`[SPRING GATEWAY] Forwarding payload to Python FastAPI...`);
+        
+        document.getElementById('metric-latency').style.width = '85%';
+        document.getElementById('metric-latency').style.background = '#dc3545';
+        document.getElementById('metric-latency-text').innerText = 'Timeout (Hibernation)';
+        
+        document.getElementById('metric-vram').style.width = '0%';
+        document.getElementById('metric-vram-text').innerText = '0 MB / 4096 MB';
+    }, 800);
+
+    setTimeout(() => {
+        const terminal = document.getElementById('system-terminal');
+        terminal.style.border = '1px solid #dc3545';
+        terminal.style.boxShadow = 'inset 0 0 15px rgba(220, 53, 69, 0.4)';
+
+        logToTerminal(`<span style="color: #dc3545; font-weight: bold;">[FASTAPI] CONNECTION TIMEOUT. Edge ML Node unreachable.</span>`);
+        
+        const resultsDiv = document.getElementById('scan-results');
+        resultsDiv.innerHTML = `<span style="color: #dc3545;">LIVE INFERENCE OFFLINE</span>`;
+
+        if (!hasSeenHibernationModal) {
+            showHibernationModal();
+            hasSeenHibernationModal = true;
+        }
+    }, 2500);
+}
+
 function showHibernationModal() {
     let modal = document.getElementById('hibernation-modal');
     if (!modal) {
@@ -286,7 +252,7 @@ function showHibernationModal() {
                 </p>
                 <p style="color: #aaa; font-size: 0.95em; line-height: 1.5; margin-top: 15px;">
                     <strong>Next Steps:</strong><br>
-                    • Use a pre-verified image from the <b>Resource Kit</b> to observe the architecture in action.<br>
+                    • Use a pre-verified image from the <b>Resource Kit</b> (on Desktop) to observe the architecture in action.<br>
                     • Watch the <b>Pipeline Demonstration video</b> below to see the ML classification engine run.
                 </p>
                 <button onclick="document.getElementById('hibernation-modal').style.display='none'" class="btn" style="margin-top: 20px; width: 100%; text-align: center;">Acknowledge</button>
