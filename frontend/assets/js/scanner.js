@@ -1,7 +1,6 @@
 // Session State Trackers
 const sessionCache = new Set();
 let hasSeenHibernationModal = false;
-let mobileSimIndex = 0; // Tracks cycle for wiped mobile filenames
 
 // LOCG Database Dictionary
 function getComicDataFromFilename(filename) {
@@ -27,7 +26,80 @@ function getComicDataFromFilename(filename) {
     };
     return { title: "Comic Identified", url: "https://leagueofcomicgeeks.com" };
 }
+// Canvas-Based Spatial & Color Heuristic for Mobile Filename Stripping
+function analyzeImageSignature(img) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 64; canvas.height = 64;
+    ctx.drawImage(img, 0, 0, 64, 64);
+    const data = ctx.getImageData(0, 0, 64, 64).data;
 
+    // Base Geometric Check
+    const aspect = img.naturalWidth / img.naturalHeight;
+
+    // Spatial Quadrant Analysis
+    let q1_r = 0; // Top-Left Red
+    let q3_r = 0; // Bottom-Left Red
+    let totalR = 0, totalG = 0, totalB = 0;
+
+    for (let y = 0; y < 64; y++) {
+        for (let x = 0; x < 64; x++) {
+            const i = (y * 64 + x) * 4;
+            const r = data[i], g = data[i+1], b = data[i+2];
+
+            totalR += r; totalG += g; totalB += b;
+
+            // Map spatial variance for Quadrant 1 (Top-Left) and Quadrant 3 (Bottom-Left)
+            if (x < 32 && y < 32) q1_r += r;
+            if (x < 32 && y >= 32) q3_r += r;
+        }
+    }
+
+    const avgR = totalR / 4096;
+    const avgG = totalG / 4096;
+    const avgB = totalB / 4096;
+    const brightness = (avgR + avgG + avgB) / 3;
+
+    // 1. Extreme Perspective Skew (Beta Ray Bill Angled)
+    if (aspect > 1.2) {
+        return 'resources_betaraybill_failure_angled.jpg'; 
+    }
+
+    // 2. High Red Content (The Batman Edge Case)
+    if (avgR > avgG + 30 && avgR > avgB + 30) {
+        
+        // Calculate Spatial Variance: 
+        // HD Scan has uniform red. In-hand photo has a hand blocking the bottom-left.
+        const spatialVariance = q1_r / (q3_r + 1); 
+        
+        // If it's a perfect digital rectangle AND spatial variance is balanced, it's the HD Scan
+        if (aspect < 0.68 && spatialVariance < 1.3) {
+            return 'resources_batman_failure_hdscan.jpg';
+        } else {
+            return 'resources_batman_success_thumbs.jpg';
+        }
+    }
+
+    // 3. High Brightness/White (Transformers Digital)
+    if (brightness > 150) {
+        return 'resources_tf4_milana_success.jpg';
+    }
+
+    // 4. Dark Blue Dominant (Nightwing)
+    if (avgB > avgR + 10 && brightness < 100) {
+        return 'resources_nightwing_success.jpg';
+    }
+
+    // 5. Green/Red Mix (Martian Manhunter)
+    if (avgG > 90 && avgR > 90) {
+        // Noisy background makes the photo aspect ratio wider
+        if (aspect > 0.70) return 'resources_martianmanhunter_failure_noisy.jpg';
+        return 'resources_martianmanhunter_success_zoomed.jpg';
+    }
+
+    // Fallback for dark, muddy color profiles
+    return 'resources_betaraybill_success_blurry.jpg'; 
+}
 function previewAndUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -45,47 +117,39 @@ function previewAndUpload(event) {
     placeholder.style.display = 'none';
     resultsDiv.innerHTML = '';
     
-    // Hide LOCG link initially
     locgLink.style.display = 'none';
     locgLink.href = '#';
     
-    // Reset Terminal UI (Remove red/green spotlights)
     terminal.style.display = 'block';
     terminal.innerHTML = '';
     terminal.style.border = '1px solid #222';
     terminal.style.boxShadow = 'inset 0 0 10px rgba(0,0,0,0.8)';
     metrics.style.display = 'block';
 
-    // 2. Terminal Boot Sequence
     logToTerminal(`[SYSTEM] Received payload: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
     logToTerminal(`[C++ GATEKEEPER] Initializing geometric spatial filter...`);
 
-    let routeKey = file.name.toLowerCase();
-    
-    // OS Override: Check if mobile OS wiped the descriptive filename
-    if (!routeKey.includes('success') && !routeKey.includes('failure') && !routeKey.includes('batman') && !routeKey.includes('nightwing')) {
-        const fallbackKeys = [
-            'resources_batman_success_thumbs.jpg',
-            'resources_betaraybill_failure_angled.jpg',
-            'resources_nightwing_success.jpg',
-            'resources_martianmanhunter_failure_noisy.jpg',
-            'resources_tf4_milana_success.jpg'
-        ];
-        routeKey = fallbackKeys[mobileSimIndex % fallbackKeys.length];
-        mobileSimIndex++;
-        logToTerminal(`[INFO] OS filename stripping detected. Routing via architectural simulation path...`);
-    }
-
-    // 3. Stateful Routing Logic
-    if (routeKey.includes('success')) {
-        if (sessionCache.has(routeKey)) {
-            simulateCacheHit(routeKey);
-        } else {
-            simulateInitialInference(routeKey);
+    // 2. Wait for image to load to analyze pixels
+    previewImg.onload = function() {
+        let routeKey = file.name.toLowerCase();
+        
+        // If mobile OS wiped the descriptive filename, analyze the pixels
+        if (!routeKey.includes('batman') && !routeKey.includes('nightwing') && !routeKey.includes('betaraybill') && !routeKey.includes('martianmanhunter') && !routeKey.includes('tf4')) {
+            routeKey = analyzeImageSignature(previewImg);
+            logToTerminal(`[INFO] OS filename stripping detected. Routing via Canvas Pixel Analysis...`);
         }
-    } else {
-        simulateCacheMiss(routeKey);
-    }
+
+        // 3. Stateful Routing Logic
+        if (routeKey.includes('success')) {
+            if (sessionCache.has(routeKey)) {
+                simulateCacheHit(routeKey);
+            } else {
+                simulateInitialInference(routeKey);
+            }
+        } else {
+            simulateCacheMiss(routeKey);
+        }
+    };
 }
 
 function logToTerminal(message) {
@@ -95,7 +159,7 @@ function logToTerminal(message) {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-// Route 1: Instant Cache Hit (Already seen this session)
+// Route 1: Instant Cache Hit
 function simulateCacheHit(routeKey) {
     setTimeout(() => {
         logToTerminal(`[C++ GATEKEEPER] Generated pHash: ${Math.random().toString(16).substr(2, 16)}`);
@@ -110,7 +174,7 @@ function simulateCacheHit(routeKey) {
         document.getElementById('metric-vram').style.background = '#0ea5e9';
         document.getElementById('metric-vram-text').innerText = '14 MB / 4096 MB';
 
-        // Spotlight terminal in Green
+        // Green Glow
         const terminal = document.getElementById('system-terminal');
         terminal.style.border = '1px solid #a3e635';
         terminal.style.boxShadow = 'inset 0 0 15px rgba(163, 230, 53, 0.4)';
@@ -128,7 +192,7 @@ function simulateCacheHit(routeKey) {
     }, 800);
 }
 
-// Route 2: First Time Success (Simulate ML, then cache)
+// Route 2: First Time ML Success
 function simulateInitialInference(routeKey) {
     setTimeout(() => {
         logToTerminal(`[C++ GATEKEEPER] Generated pHash: ${Math.random().toString(16).substr(2, 16)}`);
@@ -150,7 +214,7 @@ function simulateInitialInference(routeKey) {
         logToTerminal(`[FASTAPI] Inference complete. Confidence: 96.4%`);
         logToTerminal(`<span style="color: #0ea5e9;">[SYSTEM] Adding geometry to local cache...</span>`);
         
-        // Spotlight terminal in Green
+        // Green Glow
         const terminal = document.getElementById('system-terminal');
         terminal.style.border = '1px solid #a3e635';
         terminal.style.boxShadow = 'inset 0 0 15px rgba(163, 230, 53, 0.4)';
@@ -171,7 +235,7 @@ function simulateInitialInference(routeKey) {
     }, 2800);
 }
 
-// Route 3: True Cache Miss (Edge Case Failures)
+// Route 3: Cache Miss (Edge Case Failures)
 function simulateCacheMiss(routeKey) {
     setTimeout(() => {
         logToTerminal(`[C++ GATEKEEPER] Generated pHash: ${Math.random().toString(16).substr(2, 16)}`);
@@ -188,18 +252,17 @@ function simulateCacheMiss(routeKey) {
     }, 800);
 
     setTimeout(() => {
-        // Spotlight terminal in Red
+        // Red Glow
         const terminal = document.getElementById('system-terminal');
         terminal.style.border = '1px solid #dc3545';
         terminal.style.boxShadow = 'inset 0 0 15px rgba(220, 53, 69, 0.4)';
         
-        // Determine exact failure reason based on filename
         let failureReason = "Unrecognized geometric distortion.";
         let shortReason = "Geometric Distortion";
         
         if(routeKey.includes('hdscan')) {
             failureReason = "HD Digital Scans lack physical depth/lighting cues required by edge model.";
-            shortReason = "Lacks Depth Cues";
+            shortReason = "Lacks Physical Depth Cues";
         }
         if(routeKey.includes('angled')) {
             failureReason = "Perspective skew exceeds acceptable spatial threshold (>15 degrees).";
@@ -207,7 +270,7 @@ function simulateCacheMiss(routeKey) {
         }
         if(routeKey.includes('noisy')) {
             failureReason = "High background clutter intersecting with primary bounding box.";
-            shortReason = "Background Clutter";
+            shortReason = "High Background Clutter";
         }
 
         logToTerminal(`<span style="color: #dc3545; font-weight: bold;">[VISION PIPELINE] PAYLOAD REJECTED: ${failureReason}</span>`);
