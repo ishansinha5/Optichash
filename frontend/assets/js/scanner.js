@@ -1,6 +1,7 @@
 // Session State Trackers
 const sessionCache = new Set();
 let hasSeenHibernationModal = false;
+let mobileSimIndex = 0; // Tracks cycle for wiped mobile filenames
 
 // LOCG Database Dictionary
 function getComicDataFromFilename(filename) {
@@ -48,7 +49,7 @@ function previewAndUpload(event) {
     locgLink.style.display = 'none';
     locgLink.href = '#';
     
-    // Reset Terminal UI (Remove red error spotlights)
+    // Reset Terminal UI (Remove red/green spotlights)
     terminal.style.display = 'block';
     terminal.innerHTML = '';
     terminal.style.border = '1px solid #222';
@@ -59,17 +60,31 @@ function previewAndUpload(event) {
     logToTerminal(`[SYSTEM] Received payload: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
     logToTerminal(`[C++ GATEKEEPER] Initializing geometric spatial filter...`);
 
-    const filename = file.name.toLowerCase();
+    let routeKey = file.name.toLowerCase();
     
+    // OS Override: Check if mobile OS wiped the descriptive filename
+    if (!routeKey.includes('success') && !routeKey.includes('failure') && !routeKey.includes('batman') && !routeKey.includes('nightwing')) {
+        const fallbackKeys = [
+            'resources_batman_success_thumbs.jpg',
+            'resources_betaraybill_failure_angled.jpg',
+            'resources_nightwing_success.jpg',
+            'resources_martianmanhunter_failure_noisy.jpg',
+            'resources_tf4_milana_success.jpg'
+        ];
+        routeKey = fallbackKeys[mobileSimIndex % fallbackKeys.length];
+        mobileSimIndex++;
+        logToTerminal(`[INFO] OS filename stripping detected. Routing via architectural simulation path...`);
+    }
+
     // 3. Stateful Routing Logic
-    if (filename.includes('success')) {
-        if (sessionCache.has(filename)) {
-            simulateCacheHit(filename);
+    if (routeKey.includes('success')) {
+        if (sessionCache.has(routeKey)) {
+            simulateCacheHit(routeKey);
         } else {
-            simulateInitialInference(filename);
+            simulateInitialInference(routeKey);
         }
     } else {
-        simulateCacheMiss(filename);
+        simulateCacheMiss(routeKey);
     }
 }
 
@@ -81,7 +96,7 @@ function logToTerminal(message) {
 }
 
 // Route 1: Instant Cache Hit (Already seen this session)
-function simulateCacheHit(filename) {
+function simulateCacheHit(routeKey) {
     setTimeout(() => {
         logToTerminal(`[C++ GATEKEEPER] Generated pHash: ${Math.random().toString(16).substr(2, 16)}`);
         logToTerminal(`[SPRING GATEWAY] Querying PostGIS Spatial Index...`);
@@ -95,14 +110,18 @@ function simulateCacheHit(filename) {
         document.getElementById('metric-vram').style.background = '#0ea5e9';
         document.getElementById('metric-vram-text').innerText = '14 MB / 4096 MB';
 
-        const comicData = getComicDataFromFilename(filename);
+        // Spotlight terminal in Green
+        const terminal = document.getElementById('system-terminal');
+        terminal.style.border = '1px solid #a3e635';
+        terminal.style.boxShadow = 'inset 0 0 15px rgba(163, 230, 53, 0.4)';
+
+        const comicData = getComicDataFromFilename(routeKey);
         const resultsDiv = document.getElementById('scan-results');
         resultsDiv.innerHTML = `
-            <span style="color: #a3e635;">⚡ CACHE HIT: Compute Bypassed</span><br>
+            <span style="color: #a3e635;">CACHE HIT: Compute Bypassed</span><br>
             <span style="color: #fff; font-size: 1.2em;">${comicData.title}</span>
         `;
         
-        // Reveal LOCG Link
         const locgLink = document.getElementById('comic-locg-link');
         locgLink.href = comicData.url;
         locgLink.style.display = 'block';
@@ -110,7 +129,7 @@ function simulateCacheHit(filename) {
 }
 
 // Route 2: First Time Success (Simulate ML, then cache)
-function simulateInitialInference(filename) {
+function simulateInitialInference(routeKey) {
     setTimeout(() => {
         logToTerminal(`[C++ GATEKEEPER] Generated pHash: ${Math.random().toString(16).substr(2, 16)}`);
         logToTerminal(`[SPRING GATEWAY] Querying PostGIS Spatial Index...`);
@@ -131,17 +150,21 @@ function simulateInitialInference(filename) {
         logToTerminal(`[FASTAPI] Inference complete. Confidence: 96.4%`);
         logToTerminal(`<span style="color: #0ea5e9;">[SYSTEM] Adding geometry to local cache...</span>`);
         
-        sessionCache.add(filename);
+        // Spotlight terminal in Green
+        const terminal = document.getElementById('system-terminal');
+        terminal.style.border = '1px solid #a3e635';
+        terminal.style.boxShadow = 'inset 0 0 15px rgba(163, 230, 53, 0.4)';
 
-        const comicData = getComicDataFromFilename(filename);
+        sessionCache.add(routeKey);
+
+        const comicData = getComicDataFromFilename(routeKey);
         const resultsDiv = document.getElementById('scan-results');
         resultsDiv.innerHTML = `
-            <span style="color: #facc15;">🧠 EDGE INFERENCE: Successful</span><br>
+            <span style="color: #facc15;">EDGE INFERENCE: Successful Image Recognition</span><br>
             <span style="color: #fff; font-size: 1.2em;">${comicData.title}</span><br>
             <span style="color: #888; font-size: 0.8em; font-weight: normal;">(Image geometry added to local cache)</span>
         `;
         
-        // Reveal LOCG Link
         const locgLink = document.getElementById('comic-locg-link');
         locgLink.href = comicData.url;
         locgLink.style.display = 'block';
@@ -149,7 +172,7 @@ function simulateInitialInference(filename) {
 }
 
 // Route 3: True Cache Miss (Edge Case Failures)
-function simulateCacheMiss(filename) {
+function simulateCacheMiss(routeKey) {
     setTimeout(() => {
         logToTerminal(`[C++ GATEKEEPER] Generated pHash: ${Math.random().toString(16).substr(2, 16)}`);
         logToTerminal(`[SPRING GATEWAY] Querying PostGIS Spatial Index...`);
@@ -165,22 +188,33 @@ function simulateCacheMiss(filename) {
     }, 800);
 
     setTimeout(() => {
-        // Spotlight the terminal in red
+        // Spotlight terminal in Red
         const terminal = document.getElementById('system-terminal');
         terminal.style.border = '1px solid #dc3545';
         terminal.style.boxShadow = 'inset 0 0 15px rgba(220, 53, 69, 0.4)';
         
         // Determine exact failure reason based on filename
         let failureReason = "Unrecognized geometric distortion.";
-        if(filename.includes('hdscan')) failureReason = "HD Digital Scans lack physical depth/lighting cues required by edge model.";
-        if(filename.includes('angled')) failureReason = "Perspective skew exceeds acceptable spatial threshold (>15 degrees).";
-        if(filename.includes('noisy')) failureReason = "High background clutter intersecting with primary bounding box.";
+        let shortReason = "Geometric Distortion";
+        
+        if(routeKey.includes('hdscan')) {
+            failureReason = "HD Digital Scans lack physical depth/lighting cues required by edge model.";
+            shortReason = "Lacks Depth Cues";
+        }
+        if(routeKey.includes('angled')) {
+            failureReason = "Perspective skew exceeds acceptable spatial threshold (>15 degrees).";
+            shortReason = "Perspective Skew > 15°";
+        }
+        if(routeKey.includes('noisy')) {
+            failureReason = "High background clutter intersecting with primary bounding box.";
+            shortReason = "Background Clutter";
+        }
 
         logToTerminal(`<span style="color: #dc3545; font-weight: bold;">[VISION PIPELINE] PAYLOAD REJECTED: ${failureReason}</span>`);
         logToTerminal(`[FASTAPI] CONNECTION REFUSED: Engine Hibernating.`);
         
         const resultsDiv = document.getElementById('scan-results');
-        resultsDiv.innerHTML = `<span style="color: #dc3545;">⚠️ EDGE PIPELINE REJECTED</span>`;
+        resultsDiv.innerHTML = `<span style="color: #dc3545;">EDGE PIPELINE REJECTED: ${shortReason}</span>`;
 
         if (!hasSeenHibernationModal) {
             showHibernationModal();
@@ -201,7 +235,7 @@ function showHibernationModal() {
         modal.innerHTML = `
             <div style="background-color: #111; max-width: 500px; width: 100%; border: 1px solid #dc3545; border-radius: 12px; padding: 30px; text-align: left; position: relative;">
                 <span style="position: absolute; top: 10px; right: 15px; color: #888; font-size: 28px; font-weight: bold; cursor: pointer;" onclick="document.getElementById('hibernation-modal').style.display='none'">&times;</span>
-                <h2 style="color: #dc3545; margin-top: 0;">⚠️ ML Engine Hibernating</h2>
+                <h2 style="color: #dc3545; margin-top: 0;">ML Engine Hibernating</h2>
                 <p style="color: #eee; font-size: 1.05em; line-height: 1.6;">
                     To strictly enforce the Green AI mandate and eliminate idle cloud compute costs, the heavy PyTorch inference cluster is currently spun down.
                 </p>
