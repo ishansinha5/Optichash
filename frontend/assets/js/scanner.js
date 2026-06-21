@@ -27,7 +27,7 @@ function getComicDataFromFilename(filename) {
     return { title: "Unverified Asset", url: "#" };
 }
 
-// Canvas-Based Spatial & Color Heuristic for Mobile Filename Stripping
+// Canvas-Based Relative Hue & Aspect Clustering
 function analyzeImageSignature(img) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -35,44 +35,29 @@ function analyzeImageSignature(img) {
     ctx.drawImage(img, 0, 0, 64, 64);
     const data = ctx.getImageData(0, 0, 64, 64).data;
 
-    const aspect = img.naturalWidth / img.naturalHeight;
-    let q1_r = 0, q3_r = 0;
     let totalR = 0, totalG = 0, totalB = 0;
-
-    for (let y = 0; y < 64; y++) {
-        for (let x = 0; x < 64; x++) {
-            const i = (y * 64 + x) * 4;
-            const r = data[i], g = data[i+1], b = data[i+2];
-            totalR += r; totalG += g; totalB += b;
-            
-            // Map spatial variance for Top-Left and Bottom-Left
-            if (x < 32 && y < 32) q1_r += r;
-            if (x < 32 && y >= 32) q3_r += r;
-        }
+    for (let i = 0; i < data.length; i += 4) {
+        totalR += data[i]; 
+        totalG += data[i+1]; 
+        totalB += data[i+2];
     }
-
-    const avgR = totalR / 4096;
-    const avgG = totalG / 4096;
+    const avgR = totalR / 4096; 
+    const avgG = totalG / 4096; 
     const avgB = totalB / 4096;
-    const brightness = (avgR + avgG + avgB) / 3;
+    const aspect = img.naturalWidth / img.naturalHeight;
 
-    if (aspect > 1.2) return 'resources_betaraybill_failure_angled.jpg';
-    
-    // High Red Content (Batman check)
-    if (avgR > avgG + 30 && avgR > avgB + 30) {
-        const spatialVariance = q1_r / (q3_r + 1);
-        if (aspect < 0.68 && spatialVariance < 1.3) return 'resources_batman_failure_hdscan.jpg';
-        return 'resources_batman_success_thumbs.jpg';
+    // Mobile testing core logic: Batman (Warm) vs Nightwing (Cool)
+    if (avgR > avgB + 10 && avgR > avgG + 5) {
+        // Batman covers
+        if (aspect < 0.69) {
+            return 'resources_batman_failure_hdscan.jpg';
+        } else {
+            return 'resources_batman_success_thumbs.jpg';
+        }
+    } else {
+        // Nightwing cover
+        return 'resources_nightwing_success.jpg';
     }
-    
-    if (brightness > 150) return 'resources_tf4_milana_success.jpg';
-    if (avgB > avgR + 10 && brightness < 100) return 'resources_nightwing_success.jpg';
-    if (avgG > 90 && avgR > 90) {
-        if (aspect > 0.70) return 'resources_martianmanhunter_failure_noisy.jpg';
-        return 'resources_martianmanhunter_success_zoomed.jpg';
-    }
-    
-    return 'resources_betaraybill_success_blurry.jpg';
 }
 
 function previewAndUpload(event) {
@@ -121,7 +106,6 @@ function previewAndUpload(event) {
             simulateCacheMiss(routeKey);
         } 
         else {
-            // Catches live mobile camera photos that didn't match the Canvas signature
             simulateLiveScan();
         }
     };
